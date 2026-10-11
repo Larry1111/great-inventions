@@ -23,7 +23,7 @@ Computer science
 
 Each lesson page has: learning goals, video (or a "coming soon" panel), an interactive model, step-by-step notes, a key idea, the patent it's built on (for invention lessons), and a "Mark lesson complete" button. Progress is saved in the visitor's browser only.
 
-The timeline (`#timeline`) shows the question behind each invention. Clicking an event jumps to the lesson section that answers it, and each lesson section links back to its events. It also appears on the home page and on each course page.
+The timeline (`#timeline`) shows the question behind each invention. Clicking an event jumps to the lesson section that answers it, and each lesson section links back to its events. Events have an importance level (landmark, major step, supporting) that sets how they're drawn and labeled. Visitors can filter by field, importance and search text, and zoom by scrolling, pinching, double-clicking or dragging across a range of years. It also appears on the home page and on each course page.
 
 The blog (`#blog`) is for site updates and announcements.
 
@@ -76,7 +76,7 @@ A part after a dot points inside a page: `#lesson-stm.q3` opens the STM lesson a
 
 The site is hosted on GitHub Pages from the `main` branch of this repository. Any change pushed to `main` goes live in about a minute.
 
-Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=3`; raise that number (find and replace `?v=3` with `?v=4`) when you publish changes, so returning visitors get the new files right away.
+Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=4`; raise that number (find and replace `?v=4` with `?v=5`) when you publish changes, so returning visitors get the new files right away.
 
 ## Notes
 

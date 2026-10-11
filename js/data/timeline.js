@@ -3,120 +3,150 @@
    question that drove each one.
 
    Each event:
-     id        unique, used in addresses (#timeline.<id>); letters, numbers, dashes
-     year      the year shown on the timeline
-     field     "ph", "ee" or "cs"
-     title     what happened
-     question  the question or problem that motivated it
-     summary   one or two sentences
-     to        [lesson slug, note number]: where clicking the event takes you.
-               Note numbers match Q1, Q2... in that lesson. Use "model" for the interactive model.
+     id          unique, used in addresses (#timeline.<id>); letters, numbers, dashes
+     year        the year shown on the timeline
+     field       "ph", "ee" or "cs"
+     title       what happened
+     importance  3 = landmark: drawn large, as a diamond, and labeled first
+                 2 = major step
+                 1 = supporting detail
+                 The "Show" filter on the chart hides events below the level picked.
+     short       a few words, used as the event's label on the chart
+     question    the question or problem that motivated it
+     summary     one or two sentences
+     to          [lesson slug, note number]: where clicking the event takes you.
+                 Note numbers match Q1, Q2... in that lesson. Use "model" for the interactive model.
    ============================================================ */
 window.GI = window.GI || {};
 
 GI.TIMELINE = [
   // ---------- Physics ----------
   { id: "abbe", year: 1873, field: "ph", title: "Abbe works out the diffraction limit",
+    importance: 2, short: "Diffraction limit",
     question: "Why does every microscope blur details below a certain size, no matter how well it is made?",
     summary: "Ernst Abbe shows that the smallest resolvable detail is set by the wavelength of light and the lens aperture: at best about half a wavelength.",
     to: ["resolution-limit", 1] },
   { id: "einstein", year: 1917, field: "ph", title: "Einstein describes stimulated emission",
+    importance: 2, short: "Stimulated emission",
     question: "How must atoms absorb and emit light so that matter and radiation stay in thermal equilibrium?",
     summary: "To reproduce Planck's radiation law, Einstein needs a third process: a passing photon can trigger an excited atom to emit an identical photon.",
     to: ["thermal-light", 1] },
   { id: "dempster", year: 1918, field: "ph", title: "Dempster builds a magnetic-sector mass spectrometer",
+    importance: 2, short: "Mass spectrometer",
     question: "How can you sort atoms by mass precisely enough to count their isotopes?",
     summary: "Arthur Dempster bends ions through a 180° magnetic field onto a detector, the same geometry as this course's model.",
     to: ["magnetic-sector", 2] },
   { id: "kingdon", year: 1923, field: "ph", title: "Kingdon traps ions around a charged wire",
+    importance: 1, short: "Kingdon trap",
     question: "Can an electric field alone hold ions in orbit, with no magnet?",
     summary: "Kenneth Kingdon's trap, a thin wire inside a metal cylinder, keeps ions circling the wire. The Orbitrap later reshapes these electrodes so ions also oscillate along the axis.",
     to: ["orbitrap", 1] },
   { id: "debroglie", year: 1924, field: "ph", title: "de Broglie proposes that electrons are waves",
+    importance: 2, short: "Matter waves",
     question: "If light can behave like particles, can particles behave like waves?",
     summary: "Louis de Broglie gives every particle a wavelength h/p. For fast electrons it is far smaller than an atom.",
     to: ["resolution-limit", 3] },
   { id: "ruska", year: 1931, field: "ph", title: "Knoll and Ruska build the first electron microscope",
+    importance: 3, short: "Electron microscope",
     question: "Could a beam of electrons, focused by magnetic lenses, beat the resolution of light?",
     summary: "Max Knoll and Ernst Ruska use magnetic coils as lenses. By 1933 Ruska's instrument resolves finer detail than any light microscope.",
     to: ["resolution-limit", 3] },
   { id: "maser", year: 1954, field: "ph", title: "Townes's group builds the maser",
+    importance: 2, short: "Maser",
     question: "Could stimulated emission amplify microwaves if more molecules were excited than relaxed?",
     summary: "Charles Townes, James Gordon and Herbert Zeiger separate excited ammonia molecules to create a population inversion, and with it the first maser.",
     to: ["thermal-light", 4] },
   { id: "optical-maser", year: 1958, field: "ph", title: "Schawlow and Townes propose the optical maser",
+    importance: 1, short: "Optical maser proposal",
     question: "How do you make a maser work at light wavelengths, where a closed resonator is impossible to build?",
     summary: "Their answer is an open cavity: two parallel mirrors facing each other. The patent they file is granted in 1960.",
     to: ["laser-cavity", 1] },
   { id: "maiman", year: 1960, field: "ph", title: "Maiman builds the first laser",
+    importance: 3, short: "First laser",
     question: "Which material can actually reach a population inversion at optical wavelengths?",
     summary: "Theodore Maiman pumps a ruby crystal with a flash lamp at Hughes Research Laboratories and produces the first laser light.",
     to: ["laser-cavity", 1] },
   { id: "stm", year: 1981, field: "ph", title: "Binnig and Rohrer image a surface with tunneling current",
+    importance: 3, short: "Tunneling microscope",
     question: "Instead of looking at a surface, could you feel it atom by atom with a sharp tip?",
     summary: "At IBM Zurich they hold a tip a few ångströms above a surface and use the tunneling current to trace its atoms. Their patent issues in 1982.",
     to: ["stm", 3] },
   { id: "orbitrap", year: 1999, field: "ph", title: "Makarov patents the Orbitrap",
+    importance: 2, short: "Orbitrap",
     question: "Can you measure mass as a frequency, with no magnet at all?",
     summary: "Shaped electrodes make each ion's oscillation along the axis depend only on m/z. The first commercial instrument follows in 2005.",
     to: ["orbitrap", 2] },
 
   // ---------- Electrical engineering ----------
   { id: "transistor", year: 1947, field: "ee", title: "Bell Labs demonstrates the transistor",
+    importance: 3, short: "Transistor",
     question: "Can a small solid crystal replace the hot, fragile vacuum tube?",
     summary: "John Bardeen and Walter Brattain, in William Shockley's group, demonstrate the point-contact transistor. Circuits shrink, but every part is still made and wired separately.",
     to: ["tyranny-of-numbers", 1] },
   { id: "kilby", year: 1958, field: "ee", title: "Kilby builds a circuit from one crystal",
+    importance: 3, short: "Integrated circuit",
     question: "If every soldered joint is a chance to fail, can you stop making joints?",
     summary: "Jack Kilby at Texas Instruments demonstrates a germanium chip with a transistor, resistors and a capacitor formed in one piece.",
     to: ["tyranny-of-numbers", 3] },
   { id: "planar", year: 1959, field: "ee", title: "The planar process puts wiring on the chip",
+    importance: 2, short: "Planar process",
     question: "How do you connect components without hand-attached wires?",
     summary: "Jean Hoerni's planar process keeps silicon flat under a protective oxide; Robert Noyce runs metal wiring over that oxide. Whole circuits can now be printed.",
     to: ["planar-process", 1] },
   { id: "mosfet", year: 1959, field: "ee", title: "Atalla and Kahng build the MOSFET",
+    importance: 3, short: "MOSFET",
     question: "Can a voltage on an insulated gate switch current through silicon?",
     summary: "Silicon's own oxide gives a clean insulating surface. A gate on top of it turns a conducting channel on and off.",
     to: ["mosfet", 1] },
   { id: "cmos", year: 1963, field: "ee", title: "Wanlass and Sah introduce CMOS",
+    importance: 2, short: "CMOS",
     question: "Why should a logic gate burn power when it isn't doing anything?",
     summary: "Frank Wanlass and Chih-Tang Sah of Fairchild show that pairing n- and p-channel transistors cuts standby power to almost nothing.",
     to: ["cmos", 1] },
   { id: "euv", year: 2019, field: "ee", title: "EUV lithography enters volume production",
+    importance: 2, short: "EUV lithography",
     question: "Once 193 nm light runs out of resolution, what prints the next transistors?",
     summary: "Chipmakers begin printing their finest layers with 13.5 nm extreme ultraviolet light, a wavelength about 14 times shorter.",
     to: ["planar-process", 3] },
 
   // ---------- Computer science ----------
   { id: "diffie-hellman", year: 1976, field: "cs", title: "Diffie and Hellman propose public-key cryptography",
+    importance: 3, short: "Public-key cryptography",
     question: "Can two people who have never met agree on a secret key over a public channel?",
     summary: "Their paper \"New Directions in Cryptography\" shows how, using functions that are easy to compute and hard to reverse.",
     to: ["one-way", 1] },
   { id: "rsa", year: 1977, field: "cs", title: "Rivest, Shamir and Adleman invent RSA",
+    importance: 3, short: "RSA",
     question: "Which one-way function has a trapdoor that only the key's owner can open?",
     summary: "Factoring: multiplying two primes is easy, and splitting the product is hard unless you already know the primes. The patent issues in 1983.",
     to: ["rsa", 1] },
   { id: "shor", year: 1994, field: "cs", title: "Shor shows quantum computers could factor quickly",
+    importance: 2, short: "Shor's algorithm",
     question: "Is factoring hard for every kind of computer?",
     summary: "Peter Shor's algorithm would factor large numbers efficiently on a large quantum computer, which would break RSA.",
     to: ["one-way", 4] },
   { id: "pagerank", year: 1998, field: "cs", title: "Brin and Page describe PageRank",
+    importance: 3, short: "PageRank",
     question: "How do you rank millions of web pages that no one has ever rated?",
     summary: "Treat every link as a vote, weight each vote by the rank of the page casting it, and solve the resulting loop.",
     to: ["pagerank", 2] },
   { id: "bahdanau", year: 2014, field: "cs", title: "Neural translation learns to attend",
+    importance: 2, short: "Neural attention",
     question: "How can a translation model look back at the right source word instead of memorizing the whole sentence?",
     summary: "Dzmitry Bahdanau, Kyunghyun Cho and Yoshua Bengio add an attention step that scores every source word at each output step.",
     to: ["attention", 1] },
   { id: "transformer", year: 2017, field: "cs", title: "\"Attention Is All You Need\"",
+    importance: 3, short: "Transformer",
     question: "What if a model dropped step-by-step reading and used only attention?",
     summary: "Ashish Vaswani and colleagues at Google introduce the Transformer, built from stacked self-attention layers. It becomes the basis of today's language models.",
     to: ["attention", 2] },
   { id: "rsa-250", year: 2020, field: "cs", title: "RSA-250 is factored",
+    importance: 1, short: "RSA-250 factored",
     question: "How large a key can today's computers actually break?",
     summary: "A 250-digit challenge number falls after about 2,700 core-years of computing. Standard 617-digit keys remain far out of reach.",
     to: ["one-way", 3] },
   { id: "pqc", year: 2024, field: "cs", title: "NIST publishes post-quantum standards",
+    importance: 1, short: "Post-quantum standards",
     question: "What replaces RSA before large quantum computers arrive?",
     summary: "The first U.S. standards for encryption and signatures built on problems believed to be hard even for quantum computers.",
     to: ["one-way", 4] }

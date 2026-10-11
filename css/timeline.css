@@ -9,6 +9,11 @@
 .chip{border:1px solid var(--rule);background:var(--sheet);color:var(--muted);border-radius:999px;padding:7px 14px;font:500 .86rem var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .chip i{width:8px;height:8px;border-radius:50%;background:var(--acc)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tl-search{flex:1 1 220px;max-width:340px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:999px;padding:7px 14px;font:400 .88rem var(--body)}
+.tl-search:focus{outline:2px solid var(--ink);outline-offset:1px}
+.tl-count{color:var(--muted);font-size:.8rem;margin-left:auto}
+.tl-clear{border:0;background:none;color:var(--ink);font:500 .84rem var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px}
+.tl-clear[hidden]{display:none}
 
 /* chart */
 .tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:20px;align-items:start}
@@ -22,10 +27,16 @@
 .tl-zoom button+button{border-left:1px solid var(--rule)}
 .tl-zoom button:hover:not(:disabled){background:var(--rule-soft)}
 .tl-zoom button:disabled{color:var(--rule);cursor:default}
+.tl-range{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-right:auto}
 .tl-eras{display:flex;flex-wrap:wrap;gap:6px}
-.tl-eras button{border:1px solid var(--rule);background:transparent;color:var(--muted);border-radius:999px;padding:5px 12px;font:500 .8rem var(--body);cursor:pointer}
-.tl-eras button:hover{color:var(--ink)}
-.tl-eras button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tl-eras button,.tl-show button{border:1px solid var(--rule);background:transparent;color:var(--muted);border-radius:999px;padding:5px 12px;font:500 .8rem var(--body);cursor:pointer}
+.tl-eras button:hover,.tl-show button:hover{color:var(--ink)}
+.tl-eras button[aria-pressed="true"],.tl-show button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tl-show{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.tl-show .mono{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:2px}
+.tl-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted)}
+.tl-legend li{display:flex;align-items:center;gap:5px}
+.tl-legend svg{overflow:visible}
 .tl-help{margin-top:6px;font-size:.78rem;color:var(--muted)}
 .tl-lane{fill:var(--acc);opacity:.07}
 .tl-lane-label{font:600 15px var(--body);fill:var(--acc)}
@@ -33,10 +44,26 @@
 .tl-break-bg{fill:var(--sheet)}
 .tl-grid{stroke:var(--rule-soft);stroke-width:1}
 .tl-tick{font:500 12px var(--mono);fill:var(--muted)}
+.tl-svg:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+.tl-axis-band{fill:transparent}
 .tl-dot{pointer-events:none;outline:none}
-.tl-mark{fill:var(--sheet);stroke:var(--acc);stroke-width:2.5}
-.tl-dot.on .tl-mark{fill:var(--acc);stroke-width:4}
-.tl-dot:focus-visible .tl-mark{stroke:var(--ink);stroke-width:3}
+/* markers by importance: 3 landmark diamond, 2 major filled dot, 1 supporting hollow dot */
+.tl-mark{stroke:var(--acc);stroke-width:2;transition:stroke-width .15s}
+.tl-m3{fill:var(--acc);stroke:var(--sheet);stroke-width:2;stroke-linejoin:round}
+.tl-m2{fill:color-mix(in srgb,var(--acc) 55%,var(--sheet))}
+.tl-m1{fill:var(--sheet);stroke-width:1.8}
+.tl-halo{fill:var(--acc);opacity:.15}
+.tl-ring{fill:none;stroke:var(--acc);stroke-width:2;opacity:0}
+.tl-dot.on .tl-ring{opacity:1}
+.tl-dot.on .tl-m2,.tl-dot.on .tl-m1{fill:var(--acc)}
+.tl-dot:focus-visible .tl-ring{opacity:1;stroke:var(--ink);stroke-dasharray:3 3}
+.tl-lbl{fill:var(--muted);font-family:var(--body);font-weight:500;paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round}
+.tl-lbl3{fill:var(--ink);font-weight:600}
+.tl-lbl{pointer-events:none}
+.tl-lbl.on{fill:var(--acc)}
+.tl-empty{font:500 14px var(--body);fill:var(--muted)}
+.tl-brush{fill:color-mix(in srgb,var(--ink) 10%,transparent);stroke:var(--ink);stroke-width:1;stroke-dasharray:4 3}
+.tl-brush-lbl{font:600 12px var(--mono);fill:var(--ink)}
 .tl-ov{fill:var(--rule-soft)}
 .tl-ov-dot{fill:var(--acc);opacity:.8}
 .tl-ov-win{fill:color-mix(in srgb,var(--ink) 8%,transparent);stroke:var(--ink);stroke-width:1.5}
@@ -48,6 +75,11 @@
 .tl-detail h3{font-size:1.25rem}
 .tl-d-head{display:flex;align-items:baseline;gap:12px}
 .tl-hint{color:var(--muted);font-size:.95rem;display:flex;flex-direction:column;gap:6px}
+.tl-imp{font:500 .68rem var(--mono);text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--rule);color:var(--muted);border-radius:999px;padding:1px 8px;white-space:nowrap}
+.tl-imp[data-imp="3"]{background:var(--acc);border-color:var(--acc);color:var(--sheet)}
+.tl-imp[data-imp="2"]{border-color:color-mix(in srgb,var(--acc) 50%,var(--rule));color:var(--acc)}
+.tl-d-head .tl-imp{align-self:center;margin-left:auto}
+.tl-hint b{color:var(--ink);font-weight:600}
 .tl-year{font:600 1.6rem var(--display);color:var(--acc);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .tl-q{font-size:1rem;font-style:italic;display:flex;flex-direction:column;gap:4px}
 .tl-q .eyebrow{font-style:normal}
@@ -66,12 +98,19 @@
 .tl-body{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;max-width:760px}
 .tl-body h3{font-size:1.2rem}
 .tl-sum{color:var(--muted);font-size:.95rem}
-.tl-field{color:var(--muted)}
+.tl-field{color:var(--muted);display:flex;align-items:center;gap:10px}
+.tl-item[data-imp="3"]::before{width:16px;height:16px;left:calc(4.6em - 7px);top:26px;border-radius:2px;transform:rotate(45deg);background:var(--acc);border-color:var(--sheet)}
+.tl-item[data-imp="2"]::before{background:color-mix(in srgb,var(--acc) 55%,var(--sheet))}
+.tl-item[data-imp="1"]::before{width:9px;height:9px;left:calc(4.6em - 3.5px);top:29.5px;border-width:2px}
+.tl-item[data-imp="3"] .tl-body{border-color:color-mix(in srgb,var(--acc) 40%,var(--rule))}
+.tl-item[data-imp="3"] .tl-body h3{font-size:1.3rem}
 .tl-body .tl-go{margin-top:6px}
 @media (max-width:560px){
   .tl-list::before{left:6px}
   .tl-item{grid-template-columns:minmax(0,1fr);gap:4px;padding-left:24px}
   .tl-item::before{left:1px;top:22px}
+  .tl-item[data-imp="3"]::before{left:-1px;top:20px}
+  .tl-item[data-imp="1"]::before{left:2.5px;top:23.5px}
   .tl-item .tl-year{text-align:left;padding-top:0}
 }
 
