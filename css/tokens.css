@@ -1,0 +1,48 @@
+/* ============================================================
+   tokens.css: colors and fonts for the whole site.
+   Change a color here and it updates everywhere.
+   --ph = physics, --ee = electrical, --cs = computing
+   ============================================================ */
+
+:root{
+  /* light theme */
+  --paper:#EEF1F4;      /* page background */
+  --sheet:#FFFFFF;      /* cards and panels */
+  --ink:#131922;        /* main text and lines */
+  --muted:#586473;      /* secondary text */
+  --rule:#C6CFD9;       /* borders */
+  --rule-soft:#E1E6EC;  /* faint dividers */
+
+  --ph:#087F97;         /* physics accent */
+  --ee:#B5520F;         /* electrical accent */
+  --cs:#5646D4;         /* computing accent */
+
+  /* fonts */
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+
+  --acc:var(--ink);     /* current accent, set per field below */
+  --r:6px;
+  color-scheme:light;
+}
+
+/* dark theme: follows the device setting unless the visitor picks light */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A0E13; --sheet:#10161E; --ink:#E6EBF1; --muted:#8B97A6; --rule:#28323F; --rule-soft:#19212B;
+    --ph:#45D1E8; --ee:#F39552; --cs:#A39AFF;
+    color-scheme:dark;
+  }
+}
+/* dark theme when picked with the toggle button (keep values identical to the block above) */
+:root[data-theme="dark"]{
+  --paper:#0A0E13; --sheet:#10161E; --ink:#E6EBF1; --muted:#8B97A6; --rule:#28323F; --rule-soft:#19212B;
+  --ph:#45D1E8; --ee:#F39552; --cs:#A39AFF;
+  color-scheme:dark;
+}
+
+/* any element with data-field="ph|ee|cs" uses that field's accent */
+[data-field="ph"]{--acc:var(--ph)}
+[data-field="ee"]{--acc:var(--ee)}
+[data-field="cs"]{--acc:var(--cs)}

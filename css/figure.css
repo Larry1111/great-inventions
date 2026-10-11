@@ -1,0 +1,71 @@
+/* ============================================================
+   figure.css: the interactive patent-style drawing sheet
+   (numbered parts, lead lines, slider, crosshair, tabs).
+   ============================================================ */
+
+.sheet{position:relative;background:var(--sheet);border:1px solid var(--rule);border-radius:4px;padding:16px 18px 14px;box-shadow:0 30px 60px -44px color-mix(in srgb,var(--ink) 45%,transparent)}
+.sheet::before,.sheet::after{content:"";position:absolute;width:14px;height:14px;border:1.5px solid var(--muted);opacity:.5}
+.sheet::before{top:-8px;left:-8px;border-right:0;border-bottom:0}
+.sheet::after{bottom:-8px;right:-8px;border-left:0;border-top:0}
+.sheet-head{display:flex;justify-content:space-between;gap:12px;color:var(--muted)}
+
+.figwrap{position:relative;margin-top:6px;cursor:crosshair;touch-action:pan-y}
+.fig{display:block;width:100%;height:auto;overflow:visible}
+.fig .ln{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.fig .thick{stroke-width:3}
+.fig .hfill{fill:url(#hatch)}
+.fig .dfill{fill:url(#dots)}
+.fig .solidfill{fill:var(--sheet)}
+.hatch-line{stroke:var(--muted);stroke-width:1;opacity:.55}
+.dot-p{fill:var(--muted);opacity:.45}
+.fig .lead{fill:none;stroke:var(--muted);stroke-width:1}
+.fig .numtxt{font:500 15px var(--mono);fill:var(--ink)}
+.fig .lbl{font:500 11px var(--mono);fill:var(--muted)}
+.fig .part,.fig .num{transition:opacity .25s}
+.fig .num{cursor:pointer}
+.fig .num rect{fill:transparent}
+.fig.focus .part,.fig.focus .num{opacity:.22}
+.fig.focus .part.on,.fig.focus .num.on{opacity:1}
+.fig .part.on .ln{stroke:var(--acc)}
+.fig .num.on .numtxt{fill:var(--acc)}
+.fig .num.on .lead{stroke:var(--acc)}
+.fig .dyn-acc{fill:var(--acc)}
+.fig .dyn-stroke{fill:none;stroke:var(--acc)}
+
+/* draw-on animation when a figure appears */
+.fig.drawing .ln,.fig.drawing .lead{stroke-dasharray:1;stroke-dashoffset:1;animation:draw .9s cubic-bezier(.6,.1,.2,1) forwards;animation-delay:var(--d,0s)}
+.fig.drawing .nodraw{animation:none;stroke-dasharray:4 4;stroke-dashoffset:0}
+.fig.drawing .numtxt{opacity:0;animation:fade .4s forwards;animation-delay:var(--d,0s)}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+
+/* drafting crosshair */
+.cross{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s}
+.figwrap:hover .cross{opacity:1}
+.cross i{position:absolute;background:color-mix(in srgb,var(--acc) 45%,transparent)}
+.cross .h{left:0;right:0;height:1px}
+.cross .v{top:0;bottom:0;width:1px}
+.cross .xy{position:absolute;font:500 10.5px var(--mono);color:var(--acc);background:var(--sheet);padding:1px 4px;border:1px solid var(--rule-soft);white-space:nowrap}
+@media (hover:none){.cross{display:none}}
+
+/* slider row */
+.ctrl{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:6px;padding-top:10px;border-top:1px dashed var(--rule)}
+.ctrl label{font:500 .74rem var(--mono);color:var(--muted)}
+.ctrl output{font:500 .8rem var(--mono);color:var(--acc);min-width:7ch;text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--rule)}
+input[type=range]::-moz-range-track{height:2px;background:var(--rule)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-7px;border-radius:50%;background:var(--sheet);border:2px solid var(--acc)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--sheet);border:2px solid var(--acc)}
+
+.caption{min-height:3.2em;margin-top:8px;font-size:.92rem;color:var(--muted)}
+.caption b{font-family:var(--mono);font-weight:500;color:var(--acc);margin-right:6px}
+.caption strong{color:var(--ink);font-weight:600}
+
+/* figure tabs (home page) */
+.tabs{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.tab{flex:1 1 0;min-width:100px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px;border:1px solid var(--rule);border-radius:var(--r);background:transparent;color:var(--muted);cursor:pointer;text-align:left;position:relative;overflow:hidden}
+.tab .mono{color:inherit}
+.tab span:last-child{font:600 .9rem var(--body);color:var(--ink)}
+.tab[aria-selected="true"]{border-color:var(--acc);color:var(--acc)}
+.tab .bar{position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--acc);transform-origin:0 50%;transform:scaleX(0)}
