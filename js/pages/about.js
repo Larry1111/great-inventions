@@ -5,9 +5,7 @@
 window.GI = window.GI || {};
 
 GI.PAGES.about = () => {
-  const { esc, CONFIG, VIDEOS, counts } = GI;
-  const facts = [...CONFIG.facts, ["Library", `${VIDEOS.length} episodes · ${counts.ph} physics · ${counts.ee} electrical · ${counts.cs} computing`]];
-
+  const { esc, CONFIG } = GI;
   return {
     title: "About", nav: "about",
     html: `
@@ -15,21 +13,37 @@ GI.PAGES.about = () => {
       ${GI.crumbs([["#home", "Home"], ["#about", "About"]])}
       <header class="phead">
         <div><p class="eyebrow">About</p><h1>Hi, I'm ${esc(CONFIG.name)}.</h1></div>
-        <p class="lede">I like taking inventions apart, one numbered part at a time. Here's why this site exists and how each episode gets made.</p>
+        <p class="lede">Why this site exists and how the lessons are made.</p>
       </header>
 
       <section class="about">
         <div class="bio">
           ${CONFIG.bio.map(p => `<p>${esc(p)}</p>`).join("")}
-          <div class="ctas"><a class="btn solid" href="#contact">Get in touch <span aria-hidden="true">→</span></a><a class="btn ghost" href="#library">See the episodes</a></div>
+          <div class="ctas"><a class="btn solid" href="#courses">Browse courses <span aria-hidden="true">→</span></a><a class="btn ghost" href="#contact">Get in touch</a></div>
         </div>
-        <dl class="spec">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+        <dl class="spec">${CONFIG.facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
       </section>
 
       <section class="sec">
-        <div class="sec-head"><div><p class="eyebrow">Method</p><h2>How an episode gets made</h2></div><p class="muted" style="max-width:30em">The same order a good patent reads in. Each step depends on the one before it.</p></div>
+        <div class="sec-head"><div><p class="eyebrow">Method</p><h2>How a lesson is built</h2></div></div>
         <ol class="steps">${CONFIG.method.map(([h, p], i) => `<li><span class="mono">Step ${i + 1} of ${CONFIG.method.length}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></li>`).join("")}</ol>
       </section>
-    </div>`
+
+      <section class="sec">
+        <div class="box">
+          <p class="eyebrow">Your progress</p>
+          <p class="muted">Lesson progress is stored only in this browser. Clearing it can't be undone.</p>
+          <div class="ctas" style="margin-top:14px"><button type="button" class="btn ghost js-reset">Clear my progress</button><span class="mono muted js-reset-msg" aria-live="polite"></span></div>
+        </div>
+      </section>
+    </div>`,
+    mount(root) {
+      const btn = GI.$(".js-reset", root), msg = GI.$(".js-reset-msg", root);
+      let armed = false;
+      btn.addEventListener("click", () => {
+        if (!armed) { armed = true; btn.textContent = "Click again to confirm"; msg.textContent = ""; return; }
+        GI.progress.reset(); armed = false; btn.textContent = "Clear my progress"; msg.textContent = "Progress cleared.";
+      });
+    }
   };
 };

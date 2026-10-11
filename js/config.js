@@ -1,22 +1,23 @@
 /* ============================================================
-   config.js: site name, About page and Contact page text.
+   config.js: site name, home page text, About and Contact.
    This is the main file to personalize.
    ============================================================ */
 window.GI = window.GI || {};
 
 GI.CONFIG = {
   site: "Great Inventions",                       // logo text, browser tab, footer
-  tagline: "Animated explainers of great inventions in physics, electrical engineering and computer science.",
+  tagline: "Free courses on how great inventions in physics, electrical engineering and computer science actually work.",
 
-  // Home page headline. The last word changes with each field (see js/data/fields.js -> word).
-  heroTitle: "Great inventions, drawn one part at a time.",
-  heroLede: "Short animated videos that walk through famous inventions the way a patent drawing does: start with the problem, number each part, then show the mechanism move.",
+  // Home page
+  heroTitle: "Learn how great inventions actually work.",
+  heroLede: "Short courses built around real inventions. Each lesson pairs a video with written notes and an interactive model you can adjust yourself, so you see the physics or the math do its job.",
+  featuredLesson: "stm",                          // lesson whose model appears on the home page
 
   // About page (your name appears only here)
   name: "Larry",
   bio: [
     "I studied physics and later worked as a software engineer. Along the way I got hooked on patents. They are the most detailed public record of how things actually work, and almost nobody reads them.",
-    "This site is my attempt to change that. I pick a great invention, find the question its inventors were stuck on, and animate the answer one numbered part at a time. It's a personal project, made for anyone who likes knowing how things work."
+    "This site turns that record into courses. Each course follows one thread of ideas, from the basic science to the inventions built on it. It's a personal project, made for anyone who likes knowing how things work."
   ],
   facts: [
     ["Interests",  "Electron beams and lithography · semiconductors · lasers · machine learning · cryptography"],
@@ -25,10 +26,10 @@ GI.CONFIG = {
     ["Languages",  "English · Mandarin Chinese"]
   ],
   method: [
-    ["Read the claims",       "Claim 1 is the invention. I start from what it actually covers, not from the abstract or the marketing."],
-    ["Find the problem",      "Every patent answers a question. I name the question the inventors were stuck on before showing the answer."],
-    ["Draw the figure",       "Numbered parts, introduced one at a time, the way FIG. 1 introduces them."],
-    ["Animate the mechanism", "Motion shows what text can't: a beam bending, a channel opening, an attention weight shifting."]
+    ["Start from the question", "Every lesson opens with the problem the inventors were stuck on, before showing the answer."],
+    ["Explain the mechanism",   "Written notes walk through the idea step by step, with the equations that make it work."],
+    ["Let you change it",       "Each lesson has a model built on the real equations. Move the sliders and watch the result change."],
+    ["Point to the source",     "Lessons built on an invention link to the original patent so you can read it yourself."]
   ],
 
   // Contact page. Leave email "" to hide the email box; add links as { label, url }.

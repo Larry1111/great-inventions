@@ -1,0 +1,109 @@
+/* ============================================================
+   interactive.css: the interactive model box, its controls,
+   readouts and SVG charts. Chart colors follow the field accent.
+   ============================================================ */
+
+.ix{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:20px clamp(16px,2.5vw,26px) 18px;container-type:inline-size}
+
+.ix-head{display:flex;flex-direction:column;gap:4px;padding-bottom:14px;border-bottom:1px dashed var(--rule);margin-bottom:18px}
+.ix-head h3{font-size:1.25rem}
+.ix-body{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:24px 32px;align-items:start}
+@media (max-width:860px){.ix-body{grid-template-columns:minmax(0,1fr)}}
+.ix-controls{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ix-fig{display:flex;flex-direction:column;gap:14px;min-width:0}
+.ix-note{margin-top:16px;padding-top:12px;border-top:1px solid var(--rule-soft);font-size:.85rem;color:var(--muted)}
+
+/* control rows */
+.ix-row{display:flex;flex-direction:column;gap:6px}
+.ix-lab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.88rem;font-weight:500}
+.ix-lab output{font:500 .85rem var(--mono);color:var(--acc);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ix input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;margin:0}
+.ix input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--rule);border-radius:3px}
+.ix input[type=range]::-moz-range-track{height:3px;background:var(--rule);border-radius:3px}
+.ix input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-7.5px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--acc)}
+.ix input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--acc)}
+.ix-seg{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.ix-seg button{flex:1;padding:8px 10px;border:0;background:transparent;color:var(--muted);font:500 .86rem var(--body);cursor:pointer}
+.ix-seg button+button{border-left:1px solid var(--rule)}
+.ix-seg button[aria-pressed="true"]{background:var(--acc);color:var(--sheet)}
+.ix-select,.ix-num{width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem}
+.ix-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ix-chip{border:1px solid var(--rule);background:transparent;color:var(--muted);border-radius:999px;padding:5px 11px;font:500 .8rem var(--mono);cursor:pointer}
+.ix-chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--sheet)}
+
+/* readouts */
+.ix-ro{margin:4px 0 0;display:grid;gap:0;border-top:1px solid var(--rule-soft)}
+.ix-ro div{padding:9px 0;border-bottom:1px solid var(--rule-soft)}
+.ix-ro dt{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ix-ro dd{margin:3px 0 0;font-size:.98rem;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+
+/* charts */
+.pl{display:block;width:100%;height:auto;max-width:100%}
+.pl-grid{stroke:var(--rule-soft);stroke-width:1}
+.pl-grid-c{fill:none;stroke:var(--rule-soft);stroke-width:1}
+.pl-axis{stroke:var(--muted);stroke-width:1}
+.pl-tick{font:500 11px var(--mono);fill:var(--muted)}
+.pl-label{font:500 12px var(--body);fill:var(--muted)}
+.pl-line{fill:none;stroke:var(--acc);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.pl-line2{fill:none;stroke:var(--muted);stroke-width:1.4;opacity:.7}
+.dash{stroke-dasharray:5 4}
+.pl-fill{fill:var(--acc);opacity:.12;stroke:none}
+.pl-fill2{fill:var(--muted);opacity:.1;stroke:none}
+.pl-ref{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 4}
+.pl-ref.warn{stroke:var(--ee)}
+.pl-pt{fill:var(--acc);stroke:var(--sheet);stroke-width:2}
+.pl-pt2{fill:var(--muted);stroke:var(--sheet);stroke-width:1.5}
+.pl-text{font:500 12px var(--body);fill:var(--ink)}
+.pl-text.muted{fill:var(--muted)}
+.pl-text.strong{font-weight:600;fill:var(--acc)}
+.pl-text.warn{fill:var(--ee)}
+.pl-mode{stroke:var(--muted);stroke-width:1.2;opacity:.6}
+.pl-mode.on{stroke:var(--acc);stroke-width:2;opacity:1}
+.pl-bar{stroke:var(--rule);stroke-width:14;stroke-linecap:butt}
+.pl-bar.on{stroke:var(--acc)}
+.pl-litho{fill:var(--acc);opacity:.85}
+.pl-scale{stroke:var(--ink);stroke-width:2}
+.pl-sym{fill:none;stroke:var(--rule);stroke-width:1}
+.pl-det{fill:var(--ink)}
+.pl-edge{stroke:var(--muted);stroke-width:1.6}
+.pl-arrowhead{fill:var(--muted)}
+.pl-node{fill:var(--sheet);stroke:var(--acc);stroke-width:2}
+.pl-node.top{fill:color-mix(in srgb,var(--acc) 22%,var(--sheet))}
+.pl-node-label{font:700 15px var(--body);fill:var(--ink)}
+.pl-key{stroke:var(--muted)}
+.pl-query{stroke:var(--acc);stroke-width:3}
+.pl-track{fill:var(--rule-soft)}
+.pl-barfill{fill:var(--acc)}
+
+/* HTML bars (PageRank) */
+.ix-bars{display:grid;gap:6px}
+.ix-bar{display:grid;grid-template-columns:1.6em minmax(0,1fr) 4em;gap:10px;align-items:center;font-size:.9rem}
+.ix-bar span{font-weight:700}
+.ix-bar i{display:block;height:10px;border-radius:5px;background:var(--rule)}
+.ix-bar.top i{background:var(--acc)}
+.ix-bar b{font:500 .85rem var(--mono);text-align:right}
+
+/* step list (RSA) */
+.ix-steps{list-style:none;margin:0;padding:0;counter-reset:st;display:grid;gap:0;border-top:1px solid var(--rule-soft)}
+.ix-steps li{counter-increment:st;display:grid;grid-template-columns:2em minmax(0,1fr);column-gap:8px;padding:11px 0;border-bottom:1px solid var(--rule-soft)}
+.ix-steps li::before{content:counter(st);grid-row:span 2;font:500 .8rem var(--mono);color:var(--acc);padding-top:2px}
+.ix-steps b{font-weight:600}
+.ix-steps span{color:var(--muted);font-size:.93rem;overflow-wrap:anywhere}
+.ix-steps code{font:500 .9rem var(--mono);color:var(--ink)}
+.ix-steps code.hl{color:var(--acc);font-weight:600}
+.ix-steps li.bad b{color:var(--ee)}
+
+/* small demo (factoring) */
+.ix-demo{border-top:1px dashed var(--rule);padding-top:14px;display:grid;gap:8px}
+.ix-demo label{font-weight:600;font-size:.92rem}
+.ix-demo-row{display:flex;gap:8px;flex-wrap:wrap}
+.ix-demo input{flex:1 1 220px;min-width:0;padding:9px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);font:500 .95rem var(--mono)}
+.ix-demo .btn{padding:9px 16px}
+.ix-demo-out{font-size:.93rem;overflow-wrap:anywhere}
+
+/* in narrower spaces (e.g. inside a lesson) controls sit above the chart in a grid */
+@container (max-width: 940px){
+  .ix-body{grid-template-columns:minmax(0,1fr)}
+  .ix-controls{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:16px 24px;align-items:start}
+  .ix-controls .ix-ro{grid-column:1/-1;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));column-gap:24px}
+}

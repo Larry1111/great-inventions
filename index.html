@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Great Inventions</title>
-<meta name="description" content="Animated explainers of great inventions in physics, electrical engineering and computer science.">
+<meta name="description" content="Free courses on how great inventions in physics, electrical engineering and computer science work, with interactive models built on the real equations.">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/figure.css">
+<link rel="stylesheet" href="css/interactive.css">
 <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
@@ -37,11 +37,11 @@
   <div class="wrap">
     <div class="fgrid">
       <div><a class="brand" href="#home"><span class="mark" aria-hidden="true"></span><span class="js-site">Great Inventions</span></a><p class="muted js-tagline" style="margin-top:10px;max-width:28em"></p></div>
-      <div><p class="eyebrow">Fields</p><ul><li><a href="#physics">Physics</a></li><li><a href="#electrical">Electrical engineering</a></li><li><a href="#computing">Computer science</a></li></ul></div>
-      <div><p class="eyebrow">Watch</p><ul><li><a href="#home">Home</a></li><li><a href="#library">All episodes</a></li></ul></div>
+      <div><p class="eyebrow">Learn</p><ul><li><a href="#courses">All courses</a></li><li><a href="#physics">Physics</a></li><li><a href="#electrical">Electrical engineering</a></li><li><a href="#computing">Computer science</a></li></ul></div>
+      <div><p class="eyebrow">News</p><ul><li><a href="#blog">Blog</a></li></ul></div>
       <div><p class="eyebrow">More</p><ul><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>
     </div>
-    <div class="fbar mono"><span>© <span id="yr"></span> <span class="js-site">Great Inventions</span> · A personal project for general education.</span><span>Figures drawn in the style of patent drawings.</span></div>
+    <div class="fbar mono"><span>© <span id="yr"></span> <span class="js-site">Great Inventions</span> · A personal project for general education.</span><span>Progress is saved only in your browser.</span></div>
   </div>
 </footer>
 
@@ -49,31 +49,44 @@
   Scripts load in order. Each file adds itself to one shared object, window.GI.
   1. Content you edit most:   js/config.js, js/data/*.js
   2. Engine (rarely edited):  js/core/*.js
-  3. Animations:              js/scenes/*.js (card/panel canvases), js/figures/*.js (patent figures)
+  3. Interactive models:      js/interactives/*.js (one per lesson)
   4. Pages:                   js/pages/*.js
   5. Router starts the site:  js/core/router.js (keep last)
 -->
 <script src="js/config.js"></script>
 <script src="js/data/fields.js"></script>
-<script src="js/data/videos.js"></script>
+<script src="js/data/courses.js"></script>
+<script src="js/data/lessons-physics.js"></script>
+<script src="js/data/lessons-electrical.js"></script>
+<script src="js/data/lessons-computing.js"></script>
+<script src="js/data/blog.js"></script>
 
 <script src="js/core/utils.js"></script>
-<script src="js/core/scene.js"></script>
-<script src="js/core/figure-sheet.js"></script>
+<script src="js/core/progress.js"></script>
+<script src="js/core/ui.js"></script>
 <script src="js/core/components.js"></script>
 
-<script src="js/scenes/physics.js"></script>
-<script src="js/scenes/electrical.js"></script>
-<script src="js/scenes/computing.js"></script>
-
-<script src="js/figures/physics.js"></script>
-<script src="js/figures/electrical.js"></script>
-<script src="js/figures/computing.js"></script>
+<script src="js/interactives/resolution.js"></script>
+<script src="js/interactives/tunneling.js"></script>
+<script src="js/interactives/boltzmann.js"></script>
+<script src="js/interactives/cavity.js"></script>
+<script src="js/interactives/sector.js"></script>
+<script src="js/interactives/orbitrap.js"></script>
+<script src="js/interactives/reliability.js"></script>
+<script src="js/interactives/litho.js"></script>
+<script src="js/interactives/mosfet.js"></script>
+<script src="js/interactives/cmos.js"></script>
+<script src="js/interactives/oneway.js"></script>
+<script src="js/interactives/rsa.js"></script>
+<script src="js/interactives/pagerank.js"></script>
+<script src="js/interactives/attention.js"></script>
 
 <script src="js/pages/home.js"></script>
+<script src="js/pages/courses.js"></script>
 <script src="js/pages/field.js"></script>
-<script src="js/pages/library.js"></script>
-<script src="js/pages/episode.js"></script>
+<script src="js/pages/course.js"></script>
+<script src="js/pages/lesson.js"></script>
+<script src="js/pages/blog.js"></script>
 <script src="js/pages/about.js"></script>
 <script src="js/pages/contact.js"></script>
 <script src="js/pages/not-found.js"></script>

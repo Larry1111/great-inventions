@@ -1,54 +1,75 @@
 /* ============================================================
-   core/components.js: HTML pieces reused across pages
-   (episode card, breadcrumbs) and lookups built from the data.
+   core/components.js: links the data together (fields → courses
+   → lessons) and holds HTML pieces reused across pages.
    ============================================================ */
 window.GI = window.GI || {};
 
 (function (GI) {
-  const { esc, $$ } = GI;
+  const { esc } = GI;
 
-  // lookups
-  GI.VIDEOS.forEach((v, i) => v.i = i);
-  GI.bySlug = {};      GI.VIDEOS.forEach(v => GI.bySlug[v.slug] = v);
+  // ---------- connect courses and lessons ----------
+  GI.courseBySlug = {};
+  GI.COURSES.forEach(c => {
+    c.lessons = c.lessons.map((slug, i) => {
+      const l = GI.LESSONS[slug];
+      if (!l) { console.warn(`Course "${c.slug}" lists lesson "${slug}", which isn't in js/data/lessons-*.js`); return null; }
+      return Object.assign(l, { slug, course: c, n: i + 1 });
+    }).filter(Boolean);
+    GI.courseBySlug[c.slug] = c;
+  });
+  GI.lessonBySlug = {};
+  GI.COURSES.forEach(c => c.lessons.forEach(l => GI.lessonBySlug[l.slug] = l));
+  GI.coursesIn = k => GI.COURSES.filter(c => c.field === k);
   GI.fieldBySlug = {}; GI.ORDER.forEach(k => GI.fieldBySlug[GI.FIELDS[k].slug] = k);
-  GI.counts = { ph: 0, ee: 0, cs: 0 }; GI.VIDEOS.forEach(v => GI.counts[v.f]++);
+  GI.postBySlug = {}; GI.BLOG.forEach(p => GI.postBySlug[p.slug] = p);
 
-  GI.fieldHref = k => "#" + GI.FIELDS[k].slug;
-  GI.epHref = v => "#ep-" + v.slug;
+  // ---------- addresses ----------
+  GI.fieldHref  = k => "#" + GI.FIELDS[k].slug;
+  GI.courseHref = c => "#course-" + c.slug;
+  GI.lessonHref = l => "#lesson-" + l.slug;
+  GI.postHref   = p => "#post-" + p.slug;
 
-  // one episode card (used on Home, field pages, Library and episode pages)
-  GI.cardHTML = v => `
-  <a class="card" href="${GI.epHref(v)}" data-field="${v.f}" data-i="${v.i}">
-    <span class="thumb">
-      <canvas data-mode="${v.f}" data-seed="${20 + v.i * 7}"></canvas>
-      <span class="fign">FIG. 3.${v.i + 1}</span>
-      <span class="play" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 1.5v11l9.5-5.5z" fill="currentColor"/></svg></span>
-    </span>
-    <span class="meta mono"><span class="fdot">${esc(GI.FIELDS[v.f].short)}</span><span>${esc(v.patent)}</span><span>${v.yr}</span></span>
-    <h3>${esc(v.title)}</h3>
-    <span class="sub">${esc(v.pt)} · ${esc(v.who)}</span>
-    <span class="mono muted">${v.qs.length} questions</span>
-  </a>`;
-
-  // breadcrumbs: items = [[href, label], ...]
+  // ---------- reusable HTML ----------
   GI.crumbs = items => `<nav class="crumbs mono" aria-label="Breadcrumb">${items.map(([h, l], i) =>
     i < items.length - 1 ? `<a href="${h}">${esc(l)}</a><span aria-hidden="true">/</span>` : `<span aria-current="page">${esc(l)}</span>`).join("")}</nav>`;
 
-  // start the canvases on a page.
-  // card thumbnails animate on hover; canvases marked data-live animate whenever visible.
-  GI.mountCanvases = (root, list) => {
-    $$(".thumb canvas", root).forEach(cv => {
-      const s = new GI.Scene(cv, cv.dataset.mode, +cv.dataset.seed); list.push(s);
-      if (GI.reduce) return;
-      const card = cv.closest(".card"), on = () => GI.active.add(s), off = () => GI.active.delete(s);
-      card.addEventListener("pointerenter", on); card.addEventListener("pointerleave", off);
-      card.addEventListener("focus", on); card.addEventListener("blur", off);
-    });
-    $$("canvas[data-live]", root).forEach(cv => {
-      const s = new GI.Scene(cv, cv.dataset.mode, +cv.dataset.seed); list.push(s);
-      if (!GI.reduce) GI.active.add(s);
-    });
+  GI.progressBar = c => {
+    const done = GI.progress.count(c), n = c.lessons.length;
+    return `<div class="pbar-wrap"><span class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="${n}" aria-valuenow="${done}" aria-label="Lessons completed"><i style="width:${(100 * done / n).toFixed(0)}%"></i></span><span class="mono muted">${done} of ${n} lessons done</span></div>`;
   };
+
+  GI.lessonKind = l => l.patent ? `${esc(l.patent.number)} · ${esc(l.patent.title)}` : "Background lesson";
+
+  // course card (catalog, home, field pages)
+  GI.courseCard = c => {
+    const started = GI.progress.count(c) > 0;
+    return `
+    <a class="ccard" href="${GI.courseHref(c)}" data-field="${c.field}">
+      <span class="ccard-top mono"><span class="fdot">${esc(GI.FIELDS[c.field].short)}</span><span>${c.lessons.length} lessons</span></span>
+      <h3>${esc(c.title)}</h3>
+      <p>${esc(c.summary)}</p>
+      <ol class="ccard-list">${c.lessons.map(l => `<li class="${GI.progress.isDone(l.slug) ? "done" : ""}">${esc(l.short)}</li>`).join("")}</ol>
+      ${started ? GI.progressBar(c) : `<span class="ccard-go">Start course <span aria-hidden="true">→</span></span>`}
+    </a>`;
+  };
+
+  // one row in a course's lesson list
+  GI.lessonRow = l => {
+    const done = GI.progress.isDone(l.slug);
+    return `
+    <li><a class="lrow${done ? " done" : ""}" href="${GI.lessonHref(l)}">
+      <span class="lnum mono" aria-hidden="true">${done ? "✓" : l.n}</span>
+      <span class="lmain"><span class="ltitle">${esc(l.title)}</span><span class="lsub mono">${GI.lessonKind(l)}</span></span>
+      <span class="lstat mono">${done ? "Done" : "Start →"}</span>
+    </a></li>`;
+  };
+
+  GI.postCard = p => `
+    <a class="pcard" href="${GI.postHref(p)}">
+      <span class="mono muted">${GI.fmtDate(p.date)}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.summary)}</p>
+    </a>`;
 
   GI.PAGES = {};
 })(window.GI);
