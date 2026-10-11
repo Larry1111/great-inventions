@@ -71,7 +71,11 @@ window.GI = window.GI || {};
         target.classList.remove("flash"); void target.offsetWidth; target.classList.add("flash");
         target.focus({ preventScroll: true });
       });
-    } else if (!first) { scrollTo({ top: 0, behavior: "instant" }); view.focus({ preventScroll: true }); }
+    } else if (!first) {
+      // a page can ask to return to a saved scroll position (e.g. the timeline after visiting a lesson)
+      scrollTo({ top: page.scrollY || 0, behavior: "instant" });
+      view.focus({ preventScroll: true });
+    }
     first = false;
   }
 

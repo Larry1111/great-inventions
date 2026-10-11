@@ -3,8 +3,23 @@
    links from lesson notes, and the highlight after a jump.
    ============================================================ */
 
-/* filter chips */
+/* filters: branch picker, search, count */
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 16px}
+.tl-filters{margin:26px 0 16px;display:flex;flex-direction:column;gap:12px}
+.tl-filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tl-tree{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.tl-tree{grid-template-columns:minmax(0,1fr)}}
+.tl-tree-f{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px}
+.tl-tree-head{display:flex;align-items:center;gap:8px;border:0;background:none;padding:2px 0;font:600 .95rem var(--body);color:var(--acc);cursor:pointer;text-align:left}
+.tl-tree-head i{width:9px;height:9px;border-radius:50%;background:var(--acc)}
+.tl-tree-head span,.tl-tree-b span{margin-left:auto;font-size:.72rem;color:var(--muted);font-weight:500}
+.tl-tree-head[aria-pressed="true"]{text-decoration:underline;text-underline-offset:4px}
+.tl-tree-b{display:flex;flex-wrap:wrap;gap:6px}
+.tl-tree-b button{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:transparent;color:var(--ink);border-radius:999px;padding:4px 10px;font:500 .8rem var(--body);cursor:pointer}
+.tl-tree-b button:hover{border-color:var(--acc)}
+.tl-tree-b button[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:var(--sheet)}
+.tl-tree-b button[aria-pressed="true"] span{color:inherit;opacity:.8}
+.tl-tree-b button.none{opacity:.45}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--rule);background:var(--sheet);color:var(--muted);border-radius:999px;padding:7px 14px;font:500 .86rem var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .chip i{width:8px;height:8px;border-radius:50%;background:var(--acc)}
@@ -19,7 +34,12 @@
 .tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:20px;align-items:start}
 @media (max-width:960px){.tl-wrap{grid-template-columns:minmax(0,1fr)}}
 .tl-chart{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:12px 12px 10px;min-width:0}
-.tl-plot{width:100%}
+.tl-plot{width:100%;position:relative}
+.tl-wrap{scroll-margin-top:90px;outline:none}
+.tl-wrap.flash{animation:none}
+.tl-tip{position:absolute;z-index:2;pointer-events:none;max-width:260px;background:var(--ink);color:var(--paper);font:500 .8rem/1.35 var(--body);padding:6px 10px;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.tl-tip .mono{color:color-mix(in srgb,var(--acc) 60%,var(--paper));font-weight:600}
+.tl-tip[hidden]{display:none}
 .tl-svg{display:block;width:100%;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .tl-tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:8px}
 .tl-zoom{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
@@ -40,11 +60,20 @@
 .tl-help{margin-top:6px;font-size:.78rem;color:var(--muted)}
 .tl-lane{fill:var(--acc);opacity:.07}
 .tl-lane-label{font:600 15px var(--body);fill:var(--acc)}
+.tl-sublane{opacity:.05}
+.tl-lane-sub{font:500 11px var(--mono);fill:var(--muted)}
+.tl-branch-label{font:500 12px var(--body);fill:var(--acc)}
+.tl-toggle{cursor:pointer;outline:none}
+.tl-toggle-bg{fill:transparent}
+.tl-toggle:hover .tl-toggle-bg,.tl-chart[data-kb] .tl-toggle:focus .tl-toggle-bg{fill:color-mix(in srgb,var(--acc) 8%,transparent)}
+.tl-chart[data-kb] .tl-toggle:focus .tl-toggle-bg{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:3 3}
+.tl-chev{fill:none;stroke:var(--acc);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .tl-axis{stroke:var(--muted);stroke-width:1;fill:none}
 .tl-break-bg{fill:var(--sheet)}
 .tl-grid{stroke:var(--rule-soft);stroke-width:1}
 .tl-tick{font:500 12px var(--mono);fill:var(--muted)}
-.tl-svg:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
+.tl-svg:focus,.tl-svg :focus{outline:none}
+.tl-chart[data-kb] .tl-svg:focus{outline:2px solid var(--ink);outline-offset:2px;border-radius:6px}
 .tl-axis-band{fill:transparent}
 .tl-dot{pointer-events:none;outline:none}
 /* markers by importance: 3 landmark diamond, 2 major filled dot, 1 supporting hollow dot */
@@ -55,8 +84,17 @@
 .tl-halo{fill:var(--acc);opacity:.15}
 .tl-ring{fill:none;stroke:var(--acc);stroke-width:2;opacity:0}
 .tl-dot.on .tl-ring{opacity:1}
+.tl-dot.sel .tl-ring{opacity:1;stroke-width:3}
+.tl-dot{transition:opacity .2s}
+.tl-dot.dim,.tl-lbl.dim{opacity:.22}
+.tl-link{fill:none;stroke:var(--muted);stroke-width:1.2;opacity:.35}
+.tl-link-all{stroke-dasharray:3 3}
+.tl-link-hover{stroke:var(--ink);opacity:.55;stroke-width:1.5}
+.tl-link-chain{stroke:var(--ink);opacity:.3;stroke-width:1.2}
+.tl-link-on{stroke:var(--ink);opacity:.85;stroke-width:2}
+.tl-arrow{fill:var(--muted)}
 .tl-dot.on .tl-m2,.tl-dot.on .tl-m1{fill:var(--acc)}
-.tl-dot:focus-visible .tl-ring{opacity:1;stroke:var(--ink);stroke-dasharray:3 3}
+.tl-chart[data-kb] .tl-dot:focus .tl-ring{opacity:1;stroke:var(--ink);stroke-dasharray:3 3}
 .tl-lbl{fill:var(--muted);font-family:var(--body);font-weight:500;paint-order:stroke;stroke:var(--sheet);stroke-width:3px;stroke-linejoin:round}
 .tl-lbl3{fill:var(--ink);font-weight:600}
 .tl-lbl{pointer-events:none}
@@ -70,15 +108,44 @@
 
 /* detail panel next to the chart */
 .tl-detail{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-height:300px}
-@media (max-width:960px){.tl-detail{min-height:0}}
+@media (max-width:960px){
+  .tl-detail{min-height:0}
+  /* on narrow screens a selected event opens as a sheet over the bottom of the screen */
+  .tl-detail[data-field]{position:fixed;left:8px;right:8px;bottom:8px;z-index:30;max-height:min(46vh,480px);overflow:auto;box-shadow:0 -8px 30px rgba(0,0,0,.22);overscroll-behavior:contain}
+  .tl-d-nav{position:sticky;top:-18px;background:var(--sheet);padding:8px 0;margin-top:-14px;z-index:1}
+}
 .tl-detail[data-field]{border-color:color-mix(in srgb,var(--acc) 45%,var(--rule))}
 .tl-detail h3{font-size:1.25rem}
+.tl-detail .tl-field{font-size:.78rem;margin-top:-4px}
+.tl-hint p{margin:0}
+.tl-d-nav{display:flex;align-items:center;gap:6px;margin:-6px -8px 0 0}
+.tl-d-nav .mono{font-size:.75rem;color:var(--muted);margin-right:auto;order:-1}
+.tl-d-nav button{width:32px;height:30px;border:1px solid var(--rule);border-radius:8px;background:transparent;color:var(--ink);font:500 1rem var(--body);cursor:pointer}
+.tl-d-nav button:hover:not(:disabled){background:var(--rule-soft)}
+.tl-d-nav button:disabled{color:var(--rule);cursor:default}
+.tl-d-nav [data-close]{border-color:transparent;font-size:1.3rem}
+.tl-rels{display:flex;flex-direction:column;gap:6px}
+.tl-rels div{display:flex;flex-wrap:wrap;gap:6px}
+.tl-rel{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);border-radius:999px;padding:3px 10px 3px 4px;font:500 .8rem var(--body);cursor:pointer}
+.tl-rel .mono{background:var(--acc);color:var(--sheet);border-radius:999px;padding:1px 7px;font-size:.7rem}
+.tl-rel:hover{border-color:var(--acc)}
+.tl-answer{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule-soft);padding-top:12px;margin-top:2px}
+.tl-answer-q{font-weight:600}
+.tl-answer-p{font-size:.92rem;color:var(--muted)}
+.tl-answer-p code{font-size:.85em}
+.tl-answer .tl-go{margin-top:6px}
+.tl-nolesson{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:auto}
+
+/* "Back to timeline" after opening a lesson from the chart */
+.tl-back{position:fixed;left:16px;bottom:16px;z-index:40;display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);text-decoration:none;font:600 .88rem var(--body);padding:10px 16px;border-radius:999px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.tl-back:hover{transform:translateY(-1px)}
+.tl-back[hidden]{display:none}
 .tl-d-head{display:flex;align-items:baseline;gap:12px}
 .tl-hint{color:var(--muted);font-size:.95rem;display:flex;flex-direction:column;gap:6px}
 .tl-imp{font:500 .68rem var(--mono);text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--rule);color:var(--muted);border-radius:999px;padding:1px 8px;white-space:nowrap}
 .tl-imp[data-imp="3"]{background:var(--acc);border-color:var(--acc);color:var(--sheet)}
 .tl-imp[data-imp="2"]{border-color:color-mix(in srgb,var(--acc) 50%,var(--rule));color:var(--acc)}
-.tl-d-head .tl-imp{align-self:center;margin-left:auto}
+.tl-d-head .tl-imp{align-self:center}
 .tl-hint b{color:var(--ink);font-weight:600}
 .tl-year{font:600 1.6rem var(--display);color:var(--acc);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .tl-q{font-size:1rem;font-style:italic;display:flex;flex-direction:column;gap:4px}

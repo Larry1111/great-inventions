@@ -5,6 +5,8 @@
    ============================================================ */
 window.GI = window.GI || {};
 
+GI.homeTimeline = {};   // the home timeline's zoom and selection, kept while browsing
+
 GI.PAGES.home = () => {
   const { esc, CONFIG, FIELDS, ORDER, COURSES, BLOG } = GI;
   const first = COURSES[0].lessons[0];
@@ -32,6 +34,7 @@ GI.PAGES.home = () => {
 
   return {
     title: "Home", nav: "home",
+    scrollY: GI.timeline.returnScroll("home"),
     html: `
     <section class="hero"><div class="wrap">
       <div>
@@ -78,7 +81,7 @@ GI.PAGES.home = () => {
     </div></section>` : ""}`,
 
     mount(root) {
-      GI.timeline.chart(GI.$(".js-tl", root), GI.TIMELINE);
+      GI.timeline.chart(GI.$(".js-tl", root), GI.TIMELINE, { state: GI.homeTimeline, minImportance: GI.homeTimeline.show || 2, onShow: v => { GI.homeTimeline.show = v; } });
       const ix = GI.INTERACTIVES[feat.interactive];
       if (ix) ix.mount(GI.$(".js-feature", root));
     }

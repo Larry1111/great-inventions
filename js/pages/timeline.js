@@ -1,82 +1,112 @@
 /* ============================================================
    pages/timeline.js: the full timeline (#timeline).
-   #timeline.<event id> opens the page with that event highlighted.
-   Filters: fields (chips), importance (the chart's "Show" buttons)
-   and a text search. They apply to both the chart and the list.
-   Events live in js/data/timeline.js.
+   #timeline.<event id> opens the page with that event selected.
+   Filters: branches (grouped by field), importance (the chart's "Show"
+   buttons) and a text search. They apply to both the chart and the list.
+   Events and branches live in js/data/timeline.js.
    ============================================================ */
 window.GI = window.GI || {};
 
-// filters, remembered while browsing. fields: [] means all fields
-GI.timelineFilter = { fields: [], show: 1, q: "" };
+// filters and chart state, remembered while browsing. branches: [] means all.
+// The chart starts with every field split into its branches.
+GI.timelineFilter = { branches: [], show: 1, q: "", chart: { expanded: GI.ORDER.slice() } };
 
 GI.PAGES.timeline = focusId => {
-  const { esc, FIELDS, ORDER, TIMELINE } = GI;
+  const { esc, FIELDS, ORDER, TIMELINE, BRANCHES } = GI;
   const F = GI.timelineFilter;
   const focus = GI.eventById[focusId];
-  if (focus) Object.assign(F, { fields: [], show: 1, q: "" });
-  const chips = [["all", "All fields"], ...ORDER.map(k => [k, FIELDS[k].name])];
+  const returnY = GI.timeline.returnScroll("timeline");
+  const words = () => F.q.toLowerCase().split(/\s+/).filter(Boolean);
+  const matchesText = e => words().every(w => [e.title, e.short, e.question, e.summary, String(e.year)].some(t => t.toLowerCase().includes(w)));
+  const passes = e => (!F.branches.length || F.branches.includes(e.branch)) && e.importance >= F.show && matchesText(e);
+  // arriving at an event the filters hide: clear the filters so it shows
+  if (focus && !passes(focus)) Object.assign(F, { branches: [], show: 1, q: "" });
+  if (focus) F.chart.pinned = focus.id;
 
   return {
     title: "Timeline", nav: "timeline",
-    scrollTarget: focus ? `ev-${focus.id}` : null,
+    scrollTarget: focus && returnY == null ? "tl-chart" : null,
+    scrollY: returnY,
     html: `
     <div class="wrap">
       ${GI.crumbs([["#home", "Home"], ["#timeline", "Timeline"]])}
       <header class="phead">
         <div><p class="eyebrow">Timeline</p><h1>The questions behind the inventions</h1></div>
-        <p class="lede">Every invention started as a question someone couldn't answer yet. Pick an event to see what drove it, then jump straight to the lesson section that explains the answer.</p>
+        <p class="lede">Every invention started as a question someone couldn't answer yet. Pick an event to see what drove it, what it built on and what it led to, then jump to the lesson section that explains the answer.</p>
       </header>
-      <div class="toolbar tl-filters">
-        <div class="chips" role="group" aria-label="Show events from">${chips.map(([k, l]) =>
-          `<button type="button" class="chip" data-chip="${k}" ${k !== "all" ? `data-field="${k}"` : ""} aria-pressed="false">${k !== "all" ? "<i></i>" : ""}${esc(l)}</button>`).join("")}</div>
-        <input class="tl-search" type="search" placeholder="Search events" aria-label="Search events" value="${esc(F.q)}">
-        <p class="tl-count mono" aria-live="polite"></p>
-        <button type="button" class="tl-clear">Clear filters</button>
+      <div class="tl-filters">
+        <div class="tl-filter-row">
+          <button type="button" class="chip" data-all aria-pressed="false">All branches</button>
+          <input class="tl-search" type="search" placeholder="Search events" aria-label="Search events" value="${esc(F.q)}">
+          <p class="tl-count mono" aria-live="polite"></p>
+          <button type="button" class="tl-clear">Clear filters</button>
+        </div>
+        <div class="tl-tree">${ORDER.map(k => `
+          <div class="tl-tree-f" data-field="${k}" role="group" aria-label="${esc(FIELDS[k].name)} branches">
+            <button type="button" class="tl-tree-head" data-tf="${k}" aria-pressed="false"><i></i>${esc(FIELDS[k].name)}<span class="mono"></span></button>
+            <div class="tl-tree-b">${GI.timeline.branchesOf(k).map(b =>
+              `<button type="button" data-tb="${b}" aria-pressed="false">${esc(BRANCHES[b].name)}<span class="mono"></span></button>`).join("")}</div>
+          </div>`).join("")}
+        </div>
       </div>
-      <section class="tl-wrap js-chart"></section>
+      <section class="tl-wrap js-chart" id="tl-chart" tabindex="-1"></section>
       <section class="sec"><div class="js-list"></div></section>
     </div>`,
 
     mount(root) {
       const chartEl = GI.$(".js-chart", root), listEl = GI.$(".js-list", root), search = GI.$(".tl-search", root);
-      const lanes = () => F.fields.length ? ORDER.filter(k => F.fields.includes(k)) : ORDER;
-      const words = () => F.q.toLowerCase().split(/\s+/).filter(Boolean);
-      // events passing the field and search filters (the chart applies importance itself)
-      const matching = () => {
-        const ws = words(), ls = lanes();
-        return TIMELINE.filter(e => ls.includes(e.field) && ws.every(w =>
-          [e.title, e.short, e.question, e.summary, String(e.year)].some(t => t.toLowerCase().includes(w))));
-      };
+      const allBranches = Object.keys(BRANCHES);
+      const lanes = () => ORDER.filter(k => !F.branches.length || GI.timeline.branchesOf(k).some(b => F.branches.includes(b)));
 
       let chart;
       const render = () => {
-        GI.$$(".chip", root).forEach(c => c.setAttribute("aria-pressed", c.dataset.chip === "all" ? !F.fields.length : F.fields.includes(c.dataset.chip)));
-        const ev = matching(), shown = ev.filter(e => e.importance >= F.show);
-        if (!chart) chart = GI.timeline.chart(chartEl, ev, { fields: lanes(), minImportance: F.show, onShow: v => { F.show = v; render(); } });
-        else chart.update(ev, { fields: lanes() });
+        const textOk = TIMELINE.filter(matchesText);
+        const shown = textOk.filter(passes);
+        const sel = b => F.branches.includes(b);
+        // branch picker: pressed state and how many events each would show
+        GI.$("[data-all]", root).setAttribute("aria-pressed", !F.branches.length);
+        GI.$$("[data-tb]", root).forEach(btn => {
+          const b = btn.dataset.tb, n = textOk.filter(e => e.branch === b && e.importance >= F.show).length;
+          btn.setAttribute("aria-pressed", sel(b));
+          btn.querySelector("span").textContent = n;
+          btn.classList.toggle("none", !n);
+        });
+        GI.$$("[data-tf]", root).forEach(btn => {
+          const bs = GI.timeline.branchesOf(btn.dataset.tf);
+          btn.setAttribute("aria-pressed", bs.every(sel));
+          btn.querySelector("span").textContent = textOk.filter(e => e.field === btn.dataset.tf && e.importance >= F.show).length;
+        });
+        const forChart = textOk.filter(e => !F.branches.length || F.branches.includes(e.branch));
+        const o = { fields: lanes(), branches: F.branches.length ? F.branches : null };
+        if (!chart) chart = GI.timeline.chart(chartEl, forChart, { ...o, minImportance: F.show, state: F.chart, onShow: v => { F.show = v; render(); } });
+        else chart.update(forChart, o);
         listEl.innerHTML = shown.length ? GI.timeline.list(shown) : `<p class="empty">No events match these filters.</p>`;
         GI.$(".tl-count", root).textContent = `${shown.length} of ${TIMELINE.length} events`;
-        GI.$(".tl-clear", root).hidden = !F.fields.length && F.show === 1 && !F.q;
+        GI.$(".tl-clear", root).hidden = !F.branches.length && F.show === 1 && !F.q;
       };
 
-      // field chips: the first click picks one field, later clicks add or remove fields
-      GI.$$(".chip", root).forEach(c => c.addEventListener("click", () => {
-        const k = c.dataset.chip;
-        F.fields = k === "all" ? [] : F.fields.includes(k) ? F.fields.filter(x => x !== k) : [...F.fields, k];
-        if (F.fields.length === ORDER.length) F.fields = [];
-        render();
+      // picking branches: the first click narrows to that branch (or field), later clicks add or remove
+      const setBranches = list => { F.branches = list.length === allBranches.length ? [] : list; render(); };
+      GI.$("[data-all]", root).addEventListener("click", () => setBranches([]));
+      GI.$$("[data-tb]", root).forEach(btn => btn.addEventListener("click", () => {
+        const b = btn.dataset.tb;
+        setBranches(F.branches.includes(b) ? F.branches.filter(x => x !== b) : [...F.branches, b]);
+      }));
+      GI.$$("[data-tf]", root).forEach(btn => btn.addEventListener("click", () => {
+        const bs = GI.timeline.branchesOf(btn.dataset.tf);
+        const on = bs.every(b => F.branches.includes(b));
+        setBranches(on ? F.branches.filter(b => !bs.includes(b)) : [...new Set([...F.branches, ...bs])]);
       }));
       search.addEventListener("input", () => { F.q = search.value.trim(); render(); });
       GI.$(".tl-clear", root).addEventListener("click", () => {
-        Object.assign(F, { fields: [], show: 1, q: "" });
+        Object.assign(F, { branches: [], show: 1, q: "" });
         search.value = "";
         chart.setShow(1);
         render();
       });
 
       render();
-      if (focus) { chart.select(focus.id); const li = GI.$(`#ev-${focus.id}`, root); if (li) li.classList.add("flash"); }
+      if (focus) chart.select(focus.id);
     }
   };
 };
