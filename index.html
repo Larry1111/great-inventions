@@ -12,12 +12,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 
 <!-- Styles: colors and fonts live in tokens.css -->
-<link rel="stylesheet" href="css/tokens.css">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/interactive.css">
-<link rel="stylesheet" href="css/timeline.css">
-<link rel="stylesheet" href="css/pages.css">
+<link rel="stylesheet" href="css/tokens.css?v=2">
+<link rel="stylesheet" href="css/base.css?v=2">
+<link rel="stylesheet" href="css/components.css?v=2">
+<link rel="stylesheet" href="css/interactive.css?v=2">
+<link rel="stylesheet" href="css/timeline.css?v=2">
+<link rel="stylesheet" href="css/pages.css?v=2">
 </head>
 <body>
 
@@ -47,6 +47,9 @@
 </footer>
 
 <!--
+  ?v=2 on every file: raise this number whenever you publish changes,
+  so returning visitors load the new files instead of cached copies.
+
   Scripts load in order. Each file adds itself to one shared object, window.GI.
   1. Content you edit most:   js/config.js, js/data/*.js
   2. Engine (rarely edited):  js/core/*.js
@@ -54,47 +57,47 @@
   4. Pages:                   js/pages/*.js
   5. Router starts the site:  js/core/router.js (keep last)
 -->
-<script src="js/config.js"></script>
-<script src="js/data/fields.js"></script>
-<script src="js/data/courses.js"></script>
-<script src="js/data/lessons-physics.js"></script>
-<script src="js/data/lessons-electrical.js"></script>
-<script src="js/data/lessons-computing.js"></script>
-<script src="js/data/blog.js"></script>
-<script src="js/data/timeline.js"></script>
+<script src="js/config.js?v=2"></script>
+<script src="js/data/fields.js?v=2"></script>
+<script src="js/data/courses.js?v=2"></script>
+<script src="js/data/lessons-physics.js?v=2"></script>
+<script src="js/data/lessons-electrical.js?v=2"></script>
+<script src="js/data/lessons-computing.js?v=2"></script>
+<script src="js/data/blog.js?v=2"></script>
+<script src="js/data/timeline.js?v=2"></script>
 
-<script src="js/core/utils.js"></script>
-<script src="js/core/progress.js"></script>
-<script src="js/core/ui.js"></script>
-<script src="js/core/components.js"></script>
-<script src="js/core/timeline.js"></script>
+<script src="js/core/utils.js?v=2"></script>
+<script src="js/core/progress.js?v=2"></script>
+<script src="js/core/ui.js?v=2"></script>
+<script src="js/core/components.js?v=2"></script>
+<script src="js/core/timeline.js?v=2"></script>
 
-<script src="js/interactives/resolution.js"></script>
-<script src="js/interactives/tunneling.js"></script>
-<script src="js/interactives/boltzmann.js"></script>
-<script src="js/interactives/cavity.js"></script>
-<script src="js/interactives/sector.js"></script>
-<script src="js/interactives/orbitrap.js"></script>
-<script src="js/interactives/reliability.js"></script>
-<script src="js/interactives/litho.js"></script>
-<script src="js/interactives/mosfet.js"></script>
-<script src="js/interactives/cmos.js"></script>
-<script src="js/interactives/oneway.js"></script>
-<script src="js/interactives/rsa.js"></script>
-<script src="js/interactives/pagerank.js"></script>
-<script src="js/interactives/attention.js"></script>
+<script src="js/interactives/resolution.js?v=2"></script>
+<script src="js/interactives/tunneling.js?v=2"></script>
+<script src="js/interactives/boltzmann.js?v=2"></script>
+<script src="js/interactives/cavity.js?v=2"></script>
+<script src="js/interactives/sector.js?v=2"></script>
+<script src="js/interactives/orbitrap.js?v=2"></script>
+<script src="js/interactives/reliability.js?v=2"></script>
+<script src="js/interactives/litho.js?v=2"></script>
+<script src="js/interactives/mosfet.js?v=2"></script>
+<script src="js/interactives/cmos.js?v=2"></script>
+<script src="js/interactives/oneway.js?v=2"></script>
+<script src="js/interactives/rsa.js?v=2"></script>
+<script src="js/interactives/pagerank.js?v=2"></script>
+<script src="js/interactives/attention.js?v=2"></script>
 
-<script src="js/pages/home.js"></script>
-<script src="js/pages/courses.js"></script>
-<script src="js/pages/timeline.js"></script>
-<script src="js/pages/field.js"></script>
-<script src="js/pages/course.js"></script>
-<script src="js/pages/lesson.js"></script>
-<script src="js/pages/blog.js"></script>
-<script src="js/pages/about.js"></script>
-<script src="js/pages/contact.js"></script>
-<script src="js/pages/not-found.js"></script>
+<script src="js/pages/home.js?v=2"></script>
+<script src="js/pages/courses.js?v=2"></script>
+<script src="js/pages/timeline.js?v=2"></script>
+<script src="js/pages/field.js?v=2"></script>
+<script src="js/pages/course.js?v=2"></script>
+<script src="js/pages/lesson.js?v=2"></script>
+<script src="js/pages/blog.js?v=2"></script>
+<script src="js/pages/about.js?v=2"></script>
+<script src="js/pages/contact.js?v=2"></script>
+<script src="js/pages/not-found.js?v=2"></script>
 
-<script src="js/core/router.js"></script>
+<script src="js/core/router.js?v=2"></script>
 </body>
 </html>

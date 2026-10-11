@@ -76,6 +76,8 @@ A part after a dot points inside a page: `#lesson-stm.q3` opens the STM lesson a
 
 The site is hosted on GitHub Pages from the `main` branch of this repository. Any change pushed to `main` goes live in about a minute.
 
+Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=2`; raise that number (find and replace `?v=2` with `?v=3`) when you publish changes, so returning visitors get the new files right away.
+
 ## Notes
 
 - Scripts load in the order listed at the bottom of `index.html`. Keep `js/core/router.js` last.
