@@ -98,6 +98,7 @@ window.GI = window.GI || {};
     if (back) pill.href = back.page === "home" ? "#home" : "#" + back.page;
   };
   addEventListener("hashchange", syncPill);
+  addEventListener("hashchange", () => document.body.classList.remove("tl-full-open"));   // a full-screen chart was replaced
   tl.returnScroll = page => {
     if (!back || back.page !== page) return null;
     const y = back.scroll; back = null; syncPill();
@@ -187,6 +188,7 @@ window.GI = window.GI || {};
           <div class="tl-show">
             <button type="button" data-opt="split" title="Split each field into its branches">Branches</button>
             <button type="button" data-opt="links" title="Show which events led to which">Links</button>
+            <button type="button" data-opt="full" title="Fill the whole window with the timeline (Esc to close)">⤢ Full screen</button>
           </div>
           <ul class="tl-legend">${[3, 2, 1].map(i => `<li>${legendIcon(i)}${tl.LEVEL[i]}</li>`).join("")}</ul>
         </div>
@@ -246,26 +248,36 @@ window.GI = window.GI || {};
     function render() {
       const W = Math.max(300, plot.clientWidth || 800), narrow = W < 600;
       const left = narrow ? 104 : 136, right = 14, top = 6;
-      const laneH = narrow ? 88 : 108, subH = narrow ? 64 : 74, headH = 30;
+      const headH = 30, below = 4 + 34 + 26 + 4;            // axis and overview under the lanes
       const pw = W - left - right, span = view.b - view.a;
       const X = y => left + (u(y) - view.a) / span * pw;
       const Xo = y => left + u(y) * pw;
       const ux = v => left + (v - view.a) / span * pw;
       const SIZE = narrow ? { 3: 10, 2: 7, 1: 5 } : { 3: 11, 2: 8, 1: 5.5 };
 
-      // rows: a field is one lane, or a header followed by one lane per branch
-      const rows = [];
-      let yy = top;
-      fields.forEach(k => {
-        const bs = branchesIn(k);
-        if (expanded.has(k) && bs.length) {
-          rows.push({ kind: "head", field: k, y: yy, h: headH }); yy += headH;
-          bs.forEach(b => { rows.push({ kind: "lane", field: k, branch: b, y: yy, h: subH }); yy += subH; });
-        } else { rows.push({ kind: "lane", field: k, branch: null, y: yy, h: laneH }); yy += laneH; }
-      });
+      // rows: a field is one lane, or a header followed by one lane per branch.
+      // In full screen the lanes stretch (or shrink a little) to fit the height of the window.
+      const layout = k => {
+        const laneH = (narrow ? 88 : 108) * k, subH = (narrow ? 64 : 74) * k, rows = [];
+        let yy = top;
+        fields.forEach(f => {
+          const bs = branchesIn(f);
+          if (expanded.has(f) && bs.length) {
+            rows.push({ kind: "head", field: f, y: yy, h: headH }); yy += headH;
+            bs.forEach(b => { rows.push({ kind: "lane", field: f, branch: b, y: yy, h: subH, k }); yy += subH; });
+          } else { rows.push({ kind: "lane", field: f, branch: null, y: yy, h: laneH, k }); yy += laneH; }
+        });
+        return { rows, yy };
+      };
+      let { rows, yy } = layout(1);
+      if (el.classList.contains("tl-full")) {
+        const lanesH = rows.filter(r => r.kind === "lane").reduce((t, r) => t + r.h, 0);
+        const extra = plot.clientHeight - (yy + below) - 2;
+        if (lanesH) ({ rows, yy } = layout(clamp(1 + extra / lanesH, narrow ? 1 : 0.72, 2)));
+      }
       const lanes = rows.filter(r => r.kind === "lane");
       const laneOf = e => lanes.find(r => r.field === e.field && (!r.branch || r.branch === e.branch));
-      const axisY = yy + 4, ovY = axisY + 34, ovH = 26, H = ovY + ovH + 4;
+      const axisY = yy + 4, ovY = axisY + 34, ovH = 26, H = yy + below;
 
       // keep keyboard focus on the same event or toggle across the redraw
       const act = document.activeElement;
@@ -338,7 +350,7 @@ window.GI = window.GI || {};
         evs.filter(e => laneOf(e) === row).sort((a, b) => b.importance - a.importance || a.year - b.year).forEach(e => {
           const x = X(e.year), r = SIZE[e.importance], mid = row.y + row.h / 2;
           if (x < left - r || x > W - right + r) { posById.set(e.id, { x, y: mid, r }); return; }
-          const offs = [0, -24, 24, -12, 12, -34, 34].filter(o => Math.abs(o) <= row.h / 2 - r - 4);
+          const offs = [0, -24, 24, -12, 12, -34, 34].map(o => o * row.k).filter(o => Math.abs(o) <= row.h / 2 - r - 4);
           let i = stack.findIndex(ms => ms.every(m => Math.abs(x - m.x) >= m.r + r + 4));
           if (i < 0) { i = stack.length; stack.push([]); }
           stack[i].push({ x, r });
@@ -359,7 +371,7 @@ window.GI = window.GI || {};
       // labels: landmarks first, then (when zoomed in far enough) the others, wherever they fit
       const labelsG = sv("g", { "clip-path": clip }, svg);      // above every marker
       lblEls.clear();
-      const shownYears = yb - ya, labels = [];
+      const pxPerYear = pw / (yb - ya), labels = [];
       const boxes = centers.map(c => ({ id: c.id, x0: c.x - c.r - 3, x1: c.x + c.r + 3, y0: c.y - c.r - 3, y1: c.y + c.r + 3 }));
       const clash = b => boxes.some(o => o.id !== b.id && b.x0 < o.x1 && b.x1 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0)
         || labels.some(o => b.x0 < o.x1 + 6 && b.x1 + 6 > o.x0 && b.y0 < o.y1 && b.y1 > o.y0);
@@ -367,7 +379,7 @@ window.GI = window.GI || {};
       const rank = c => c.id === pinnedId ? 2 : chain && (chain.up.has(c.id) || chain.down.has(c.id)) ? 1 : 0;
       centers.slice().sort((p, q) => rank(q) - rank(p) || q.e.importance - p.e.importance || p.e.year - q.e.year).forEach(c => {
         const imp = c.e.importance;
-        if (!rank(c) && (imp === 2 && shownYears > 70 || imp === 1 && shownYears > 30)) return;
+        if (!rank(c) && (imp === 2 && pxPerYear < 8 || imp === 1 && pxPerYear < 18)) return;   // smaller events get labels once there's room
         const fs = imp === 3 ? (narrow ? 11.5 : 12.5) : narrow ? 10.5 : 11.5;
         const w = measureW(c.e.short, `${imp === 3 ? 600 : 500} ${fs}px`), gap = imp === 3 ? 8 : 5;
         // try above, below, right and left of the marker; the label's left edge is x0
@@ -428,6 +440,7 @@ window.GI = window.GI || {};
       el.querySelectorAll("[data-show]").forEach(btn => btn.setAttribute("aria-pressed", +btn.dataset.show === minImp));
       el.querySelector('[data-opt="split"]').setAttribute("aria-pressed", fields.every(k => expanded.has(k)));
       el.querySelector('[data-opt="links"]').setAttribute("aria-pressed", showLinks);
+      fullBtn.setAttribute("aria-pressed", el.classList.contains("tl-full"));
     }
     function measureW(text, font) {
       measure.font = `${font} ${getComputedStyle(svg).getPropertyValue("--body") || "sans-serif"}`;
@@ -712,10 +725,32 @@ window.GI = window.GI || {};
     });
     el.querySelector('[data-opt="links"]').addEventListener("click", () => { showLinks = !showLinks; save(); render(); });
 
-    // redraw when the space changes size
-    let lastW = 0;
-    new ResizeObserver(() => { const w = plot.clientWidth; if (w && Math.abs(w - lastW) > 1) { lastW = w; render(); } }).observe(plot);
+    // ----- full screen: the chart fills the window, the panel docks on the right -----
+    const fullBtn = el.querySelector('[data-opt="full"]');
+    function setFull(on) {
+      if (el.classList.contains("tl-full") === on) return;
+      el.classList.toggle("tl-full", on);
+      document.body.classList.toggle("tl-full-open", on);
+      fullBtn.textContent = on ? "⤡ Exit full screen" : "⤢ Full screen";
+      st.full = on;
+      // also hide the browser's own bars where allowed; the layout works without it
+      if (on && el.requestFullscreen && !document.fullscreenElement) el.requestFullscreen().catch(() => {});
+      if (!on && document.fullscreenElement === el) document.exitFullscreen().catch(() => {});
+      render();
+      if (on) svg.focus({ preventScroll: true });
+    }
+    fullBtn.addEventListener("click", () => setFull(!el.classList.contains("tl-full")));
+    document.addEventListener("fullscreenchange", () => { if (el.isConnected && !document.fullscreenElement && el.classList.contains("tl-full")) setFull(false); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && !e.defaultPrevented && el.isConnected && el.classList.contains("tl-full")) setFull(false); });
+
+    // redraw when the space changes size (and, in full screen, height)
+    let lastW = 0, lastH = 0;
+    new ResizeObserver(() => {
+      const w = plot.clientWidth, h = el.classList.contains("tl-full") ? plot.clientHeight : 0;
+      if (w && (Math.abs(w - lastW) > 1 || Math.abs(h - lastH) > 1)) { lastW = w; lastH = h; render(); }
+    }).observe(plot);
     render();
+    if (st.full) setFull(true);
 
     return {
       // select an event (null clears) and bring it into view

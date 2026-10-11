@@ -34,6 +34,8 @@ GI.PAGES.timeline = focusId => {
         <div><p class="eyebrow">Timeline</p><h1>The questions behind the inventions</h1></div>
         <p class="lede">Every invention started as a question someone couldn't answer yet. Pick an event to see what drove it, what it built on and what it led to, then jump to the lesson section that explains the answer.</p>
       </header>
+    </div>
+    <div class="tl-stage">
       <div class="tl-filters">
         <div class="tl-filter-row">
           <button type="button" class="chip" data-all aria-pressed="false">All branches</button>
@@ -50,6 +52,8 @@ GI.PAGES.timeline = focusId => {
         </div>
       </div>
       <section class="tl-wrap js-chart" id="tl-chart" tabindex="-1"></section>
+    </div>
+    <div class="wrap">
       <section class="sec"><div class="js-list"></div></section>
     </div>`,
 

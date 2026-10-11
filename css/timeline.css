@@ -31,7 +31,23 @@
 .tl-clear[hidden]{display:none}
 
 /* chart */
+/* the timeline page's chart is wider than the text column */
+.tl-stage{max-width:1680px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
 .tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:20px;align-items:start}
+@media (min-width:1400px){.tl-stage .tl-wrap{grid-template-columns:minmax(0,1fr) minmax(0,370px)}}
+
+/* full screen: the chart fills the window, the panel docks on the right */
+.tl-full-open{overflow:hidden}
+.tl-wrap.tl-full{position:fixed;inset:0;z-index:60;margin:0;background:var(--paper);padding:12px;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:12px;align-items:stretch;overflow:hidden}
+.tl-full .tl-chart{display:flex;flex-direction:column;min-height:0;height:100%}
+.tl-full .tl-plot{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.tl-full .tl-detail{min-height:0;height:100%;overflow:auto}
+.tl-full .tl-help{display:none}
+@media (max-width:960px){
+  .tl-wrap.tl-full{grid-template-columns:minmax(0,1fr);padding:8px}
+  .tl-full .tl-detail:not([data-field]){display:none}
+}
+[data-opt="full"]{white-space:nowrap}
 @media (max-width:960px){.tl-wrap{grid-template-columns:minmax(0,1fr)}}
 .tl-chart{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:12px 12px 10px;min-width:0}
 .tl-plot{width:100%;position:relative}

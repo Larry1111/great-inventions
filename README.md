@@ -23,7 +23,7 @@ Computer science
 
 Each lesson page has: learning goals, video (or a "coming soon" panel), an interactive model, step-by-step notes, a key idea, the patent it's built on (for invention lessons), and a "Mark lesson complete" button. Progress is saved in the visitor's browser only.
 
-The timeline (`#timeline`) shows the question behind each invention. Each field can be split into broad branches (e.g. Cryptography, Machine learning & AI), which don't have to match a course, so events can be added before any lesson covers them. Clicking an event selects it: the panel beside the chart shows its question, a preview of the lesson section that answers it, and the events it built on and led to (also drawn on the chart). "Keep reading" opens the lesson, and a "Back to timeline" button returns to the same spot. Visitors can filter by branch, importance and search text, and zoom by scrolling, pinching, double-clicking or dragging across a range of years. Each lesson section links back to its events.
+The timeline (`#timeline`) shows the question behind each invention. Each field can be split into broad branches (e.g. Cryptography, Machine learning & AI), which don't have to match a course, so events can be added before any lesson covers them. Clicking an event selects it: the panel beside the chart shows its question, a preview of the lesson section that answers it, and the events it built on and led to (also drawn on the chart). "Keep reading" opens the lesson, and a "Back to timeline" button returns to the same spot. Visitors can filter by branch, importance and search text, and zoom by scrolling, pinching, double-clicking or dragging across a range of years. On the timeline page the chart is wider than the text, and "Full screen" fills the whole window with it (Esc closes). Each lesson section links back to its events.
 
 The blog (`#blog`) is for site updates and announcements.
 
@@ -76,7 +76,7 @@ A part after a dot points inside a page: `#lesson-stm.q3` opens the STM lesson a
 
 The site is hosted on GitHub Pages from the `main` branch of this repository. Any change pushed to `main` goes live in about a minute.
 
-Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=5`; raise that number (find and replace `?v=5` with `?v=6`) when you publish changes, so returning visitors get the new files right away.
+Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=6`; raise that number (find and replace `?v=6` with `?v=7`) when you publish changes, so returning visitors get the new files right away.
 
 ## Notes
 
