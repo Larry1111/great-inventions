@@ -41,6 +41,11 @@ GI.PAGES.course = c => {
         </aside>
       </section>
 
+      ${GI.timeline.forCourse(c).length ? `<section class="sec">
+        <div class="sec-head"><div><p class="eyebrow">Timeline</p><h2>The questions that led here</h2></div><a class="more" href="#timeline">Full timeline <span aria-hidden="true">→</span></a></div>
+        ${GI.timeline.list(GI.timeline.forCourse(c))}
+      </section>` : ""}
+
       ${other && other !== c ? `<a class="nextfield" href="${GI.courseHref(other)}" data-field="${other.field}"><span><span class="eyebrow">Another ${esc(F.short.toLowerCase())} course</span><h3>${esc(other.title)}</h3></span><span class="arrow" aria-hidden="true">→</span></a>` : ""}
     </div>`
   };

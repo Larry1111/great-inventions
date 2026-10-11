@@ -5,9 +5,14 @@
    ============================================================ */
 window.GI = window.GI || {};
 
-GI.PAGES.lesson = l => {
+GI.PAGES.lesson = (l, section) => {
   const { esc, FIELDS } = GI;
   const c = l.course, F = FIELDS[c.field];
+  // timeline events that point at a note, shown as small links above it
+  const eventChips = n => {
+    const ev = GI.timeline.forNote(l.slug, n);
+    return ev.length ? `<p class="tl-chips">${ev.map(e => `<a class="tl-chip" href="#timeline.${e.id}"><span class="mono">${e.year}</span>${esc(e.title)}</a>`).join("")}</p>` : "";
+  };
   const prev = c.lessons[l.n - 2], next = c.lessons[l.n];
   const pnum = l.patent ? l.patent.number.replace(/[^0-9]/g, "") : "";
 
@@ -25,6 +30,7 @@ GI.PAGES.lesson = l => {
 
   return {
     title: l.title, nav: F.slug,
+    scrollTarget: section ? `sec-${section}` : null,
     html: `
     <div class="wrap lesson" data-field="${c.field}">
       <aside class="lesson-side">
@@ -42,7 +48,7 @@ GI.PAGES.lesson = l => {
 
         ${video}
 
-        <section class="lsec">
+        <section class="lsec" id="sec-model" tabindex="-1">
           <h2 class="lsec-h"><span class="mono">Try it</span>Interactive model</h2>
           <p class="tryit">${esc(l.tryIt)}</p>
           <div class="js-ix"></div>
@@ -50,7 +56,7 @@ GI.PAGES.lesson = l => {
 
         <section class="lsec notes">
           <h2 class="lsec-h"><span class="mono">Notes</span>Step by step</h2>
-          ${l.notes.map(([q, ps], i) => `<div class="note"><h3><span class="mono">Q${i + 1}</span>${esc(q)}</h3>${ps.map(p => `<p>${p}</p>`).join("")}</div>`).join("")}
+          ${l.notes.map(([q, ps], i) => `<div class="note" id="sec-q${i + 1}" tabindex="-1">${eventChips(i + 1)}<h3><span class="mono">Q${i + 1}</span>${esc(q)}</h3>${ps.map(p => `<p>${p}</p>`).join("")}</div>`).join("")}
           <div class="takeaway"><span class="eyebrow">Key idea</span><p>${esc(l.takeaway)}</p></div>
         </section>
 

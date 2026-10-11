@@ -23,6 +23,8 @@ Computer science
 
 Each lesson page has: learning goals, video (or a "coming soon" panel), an interactive model, step-by-step notes, a key idea, the patent it's built on (for invention lessons), and a "Mark lesson complete" button. Progress is saved in the visitor's browser only.
 
+The timeline (`#timeline`) shows the question behind each invention. Clicking an event jumps to the lesson section that answers it, and each lesson section links back to its events. It also appears on the home page and on each course page.
+
 The blog (`#blog`) is for site updates and announcements.
 
 ## Which file do I edit?
@@ -33,6 +35,8 @@ The blog (`#blog`) is for site updates and announcements.
 | Add or reorder courses, change course descriptions | `js/data/courses.js` |
 | Edit lesson text, add a YouTube video to a lesson | `js/data/lessons-physics.js`, `lessons-electrical.js`, `lessons-computing.js` |
 | Write a blog post | `js/data/blog.js` |
+| Add or edit timeline events | `js/data/timeline.js` |
+| Timeline look | `css/timeline.css` |
 | Change field names or descriptions | `js/data/fields.js` |
 | Change a lesson's interactive model | `js/interactives/<name>.js` |
 | Colors and fonts | `css/tokens.css` |
@@ -58,9 +62,15 @@ Find the lesson in `js/data/lessons-<field>.js` and paste the YouTube ID (the pa
 
 Add an entry at the top of `GI.BLOG` in `js/data/blog.js` with `slug`, `date`, `title`, `summary` and `body` paragraphs.
 
+## Add a timeline event
+
+Add an entry to `GI.TIMELINE` in `js/data/timeline.js` with `id`, `year`, `field`, `title`, `question`, `summary` and `to: [lessonSlug, noteNumber]`. The note number matches Q1, Q2... in that lesson (or use `"model"` for the interactive model). Order doesn't matter; events are sorted by year.
+
 ## Addresses
 
-`#home`, `#courses`, `#physics`, `#electrical`, `#computing`, `#course-<slug>`, `#lesson-<slug>`, `#blog`, `#post-<slug>`, `#about`, `#contact`.
+`#home`, `#courses`, `#timeline`, `#physics`, `#electrical`, `#computing`, `#course-<slug>`, `#lesson-<slug>`, `#blog`, `#post-<slug>`, `#about`, `#contact`.
+
+A part after a dot points inside a page: `#lesson-stm.q3` opens the STM lesson at Q3, `#lesson-stm.model` at its model, and `#timeline.stm` opens the timeline with that event highlighted.
 
 ## Publishing
 

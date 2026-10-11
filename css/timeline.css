@@ -1,0 +1,75 @@
+/* ============================================================
+   timeline.css: the timeline chart, event list, filter chips,
+   links from lesson notes, and the highlight after a jump.
+   ============================================================ */
+
+/* filter chips */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:26px 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--rule);background:var(--sheet);color:var(--muted);border-radius:999px;padding:7px 14px;font:500 .86rem var(--body);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* chart */
+.tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:20px;align-items:stretch}
+@media (max-width:960px){.tl-wrap{grid-template-columns:minmax(0,1fr)}}
+.tl-chart{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:14px 10px 6px;overflow-x:auto;min-width:0;display:flex;align-items:center}
+.tl-svg{display:block;width:100%;min-width:720px;height:auto}
+.tl-lane{fill:var(--acc);opacity:.07}
+.tl-lane-label{font:600 17px var(--body);fill:var(--acc)}
+.tl-axis{stroke:var(--muted);stroke-width:1;fill:none}
+.tl-grid{stroke:var(--rule-soft);stroke-width:1}
+.tl-tick{font:500 14px var(--mono);fill:var(--muted)}
+.tl-tick.small{font-size:12px;font-style:italic}
+.tl-dot{cursor:pointer;outline:none}
+.tl-hit{fill:transparent}
+.tl-mark{fill:var(--sheet);stroke:var(--acc);stroke-width:2.5;transition:r .15s,fill .15s}
+.tl-dot:hover .tl-mark,.tl-dot.on .tl-mark,.tl-dot:focus-visible .tl-mark{fill:var(--acc);r:12}
+.tl-dot:focus-visible .tl-hit{stroke:var(--ink);stroke-width:2}
+
+/* detail panel next to the chart */
+.tl-detail{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.tl-detail[data-field]{border-color:color-mix(in srgb,var(--acc) 45%,var(--rule))}
+.tl-detail h3{font-size:1.25rem}
+.tl-d-head{display:flex;align-items:baseline;gap:12px}
+.tl-hint{color:var(--muted);font-size:.95rem;display:flex;flex-direction:column;gap:6px}
+.tl-year{font:600 1.6rem var(--display);color:var(--acc);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.tl-q{font-size:1rem;font-style:italic;display:flex;flex-direction:column;gap:4px}
+.tl-q .eyebrow{font-style:normal}
+.tl-go{margin-top:auto;display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:12px 14px;border-radius:8px;background:color-mix(in srgb,var(--acc) 9%,var(--sheet));border:1px solid color-mix(in srgb,var(--acc) 30%,transparent);text-decoration:none;transition:background .2s}
+.tl-go:hover{background:color-mix(in srgb,var(--acc) 16%,var(--sheet))}
+.tl-go .mono{grid-column:1;color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}
+.tl-go span:nth-child(2){grid-column:1;font-weight:600;font-size:.95rem}
+.tl-go span:last-child{grid-column:2;grid-row:1/span 2;color:var(--acc);font-size:1.2rem}
+
+/* vertical list */
+.tl-list{list-style:none;margin:0;padding:0;position:relative}
+.tl-list::before{content:"";position:absolute;left:4.6em;top:8px;bottom:8px;width:2px;background:var(--rule)}
+.tl-item{position:relative;display:grid;grid-template-columns:4em minmax(0,1fr);gap:28px;padding:16px 0;scroll-margin-top:90px;border-radius:12px}
+.tl-item::before{content:"";position:absolute;left:calc(4.6em - 5px);top:28px;width:12px;height:12px;border-radius:50%;background:var(--sheet);border:2.5px solid var(--acc)}
+.tl-item .tl-year{font-size:1.25rem;text-align:right;padding-top:16px}
+.tl-body{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:16px 20px;display:flex;flex-direction:column;gap:8px;max-width:760px}
+.tl-body h3{font-size:1.2rem}
+.tl-sum{color:var(--muted);font-size:.95rem}
+.tl-field{color:var(--muted)}
+.tl-body .tl-go{margin-top:6px}
+@media (max-width:560px){
+  .tl-list::before{left:6px}
+  .tl-item{grid-template-columns:minmax(0,1fr);gap:4px;padding-left:24px}
+  .tl-item::before{left:1px;top:22px}
+  .tl-item .tl-year{text-align:left;padding-top:0}
+}
+
+/* links from a lesson note back to the timeline */
+.tl-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tl-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border:1px solid var(--rule);border-radius:999px;font-size:.82rem;text-decoration:none;color:var(--muted);background:var(--sheet)}
+.tl-chip .mono{background:var(--acc);color:var(--sheet);border-radius:999px;padding:1px 8px;font-size:.72rem}
+.tl-chip:hover{color:var(--ink);border-color:var(--acc)}
+
+/* highlight after jumping to a section */
+.note,.lsec{scroll-margin-top:90px;outline:none}
+.flash{animation:flash 2.2s ease-out}
+@keyframes flash{
+  0%,35%{box-shadow:0 0 0 12px color-mix(in srgb,var(--acc) 12%,transparent),0 0 0 14px var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent)}
+  100%{box-shadow:0 0 0 12px transparent,0 0 0 14px transparent;background:transparent}}
+.note.flash,.lsec.flash,.tl-item.flash{border-radius:4px}

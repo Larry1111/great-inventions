@@ -46,6 +46,14 @@ GI.PAGES.home = () => {
       ${side}
     </div></section>
 
+    <section class="sec"><div class="wrap">
+      <div class="sec-head">
+        <div><p class="eyebrow">Timeline</p><h2>Every invention started as a question.</h2></div>
+        <a class="more" href="#timeline">Open the timeline <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="tl-wrap js-tl"></div>
+    </div></section>
+
     <section class="sec band"><div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Try a lesson's model</p><h2>${esc(feat.title)}</h2></div>
@@ -70,6 +78,7 @@ GI.PAGES.home = () => {
     </div></section>` : ""}`,
 
     mount(root) {
+      GI.timeline.chart(GI.$(".js-tl", root), GI.TIMELINE);
       const ix = GI.INTERACTIVES[feat.interactive];
       if (ix) ix.mount(GI.$(".js-feature", root));
     }
