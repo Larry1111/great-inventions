@@ -76,7 +76,7 @@ A part after a dot points inside a page: `#lesson-stm.q3` opens the STM lesson a
 
 The site is hosted on GitHub Pages from the `main` branch of this repository. Any change pushed to `main` goes live in about a minute.
 
-Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=2`; raise that number (find and replace `?v=2` with `?v=3`) when you publish changes, so returning visitors get the new files right away.
+Browsers keep copies of the files for a few minutes. Every file link in `index.html` ends in `?v=3`; raise that number (find and replace `?v=3` with `?v=4`) when you publish changes, so returning visitors get the new files right away.
 
 ## Notes
 

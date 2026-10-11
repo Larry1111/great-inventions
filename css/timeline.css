@@ -11,24 +11,39 @@
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 
 /* chart */
-.tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:20px;align-items:stretch}
+.tl-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:20px;align-items:start}
 @media (max-width:960px){.tl-wrap{grid-template-columns:minmax(0,1fr)}}
-.tl-chart{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:14px 10px 6px;overflow-x:auto;min-width:0;display:flex;align-items:center}
-.tl-svg{display:block;width:100%;min-width:720px;height:auto}
+.tl-chart{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:12px 12px 10px;min-width:0}
+.tl-plot{width:100%}
+.tl-svg{display:block;width:100%;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.tl-tools{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.tl-zoom{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.tl-zoom button{width:36px;height:32px;border:0;background:transparent;color:var(--ink);font:600 1.1rem var(--body);cursor:pointer}
+.tl-zoom button+button{border-left:1px solid var(--rule)}
+.tl-zoom button:hover:not(:disabled){background:var(--rule-soft)}
+.tl-zoom button:disabled{color:var(--rule);cursor:default}
+.tl-eras{display:flex;flex-wrap:wrap;gap:6px}
+.tl-eras button{border:1px solid var(--rule);background:transparent;color:var(--muted);border-radius:999px;padding:5px 12px;font:500 .8rem var(--body);cursor:pointer}
+.tl-eras button:hover{color:var(--ink)}
+.tl-eras button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tl-help{margin-top:6px;font-size:.78rem;color:var(--muted)}
 .tl-lane{fill:var(--acc);opacity:.07}
-.tl-lane-label{font:600 17px var(--body);fill:var(--acc)}
+.tl-lane-label{font:600 15px var(--body);fill:var(--acc)}
 .tl-axis{stroke:var(--muted);stroke-width:1;fill:none}
+.tl-break-bg{fill:var(--sheet)}
 .tl-grid{stroke:var(--rule-soft);stroke-width:1}
-.tl-tick{font:500 14px var(--mono);fill:var(--muted)}
-.tl-tick.small{font-size:12px;font-style:italic}
-.tl-dot{cursor:pointer;outline:none}
-.tl-hit{fill:transparent}
-.tl-mark{fill:var(--sheet);stroke:var(--acc);stroke-width:2.5;transition:r .15s,fill .15s}
-.tl-dot:hover .tl-mark,.tl-dot.on .tl-mark,.tl-dot:focus-visible .tl-mark{fill:var(--acc);r:12}
-.tl-dot:focus-visible .tl-hit{stroke:var(--ink);stroke-width:2}
+.tl-tick{font:500 12px var(--mono);fill:var(--muted)}
+.tl-dot{pointer-events:none;outline:none}
+.tl-mark{fill:var(--sheet);stroke:var(--acc);stroke-width:2.5}
+.tl-dot.on .tl-mark{fill:var(--acc);stroke-width:4}
+.tl-dot:focus-visible .tl-mark{stroke:var(--ink);stroke-width:3}
+.tl-ov{fill:var(--rule-soft)}
+.tl-ov-dot{fill:var(--acc);opacity:.8}
+.tl-ov-win{fill:color-mix(in srgb,var(--ink) 8%,transparent);stroke:var(--ink);stroke-width:1.5}
 
 /* detail panel next to the chart */
-.tl-detail{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.tl-detail{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-height:300px}
+@media (max-width:960px){.tl-detail{min-height:0}}
 .tl-detail[data-field]{border-color:color-mix(in srgb,var(--acc) 45%,var(--rule))}
 .tl-detail h3{font-size:1.25rem}
 .tl-d-head{display:flex;align-items:baseline;gap:12px}
